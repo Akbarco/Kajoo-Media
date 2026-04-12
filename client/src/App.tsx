@@ -12,6 +12,7 @@ import HomePage from '@/pages/public/HomePage';
 import CategoryPage from '@/pages/public/CategoryPage';
 import ArticleDetailPage from '@/pages/public/ArticleDetailPage';
 import SearchPage from '@/pages/public/SearchPage';
+import AllArticlesPage from '@/pages/public/AllArticlesPage';
 import NotFoundPage from '@/pages/public/NotFoundPage';
 
 // Admin Pages
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/kategori/:slug" element={<CategoryPage />} />
                 <Route path="/artikel/:slug" element={<ArticleDetailPage />} />
+                <Route path="/artikel" element={<AllArticlesPage />} />
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>

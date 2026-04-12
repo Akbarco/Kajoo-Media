@@ -48,7 +48,7 @@ export default function HomePage() {
         <section className="border-b">
           <div className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 py-4 sm:px-6">
             <Link
-              to="/"
+              to="/artikel"
               className="flex-shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
             >
               Semua
@@ -72,7 +72,7 @@ export default function HomePage() {
         <div className="mb-8 flex items-center justify-between">
           <h2 className="font-serif text-2xl sm:text-3xl">Artikel Terbaru</h2>
           <Link
-            to="/kategori/teknologi"
+            to="/artikel"
             className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             Lihat Semua <ArrowRight className="h-3.5 w-3.5" />
