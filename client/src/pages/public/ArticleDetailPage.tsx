@@ -16,11 +16,14 @@ import {
   X,
   Link2,
   Share2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { formatDate, getReadingTime, formatNumber } from "@/lib/helpers";
 import { useState, useEffect, useRef } from "react";
 import SEO from "@/components/common/SEO";
 import { toast } from "sonner";
+import ImageLightbox from "@/components/common/ImageLightbox";
 
 export default function ArticleDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -34,10 +37,39 @@ export default function ArticleDetailPage() {
   const toggleLike = useToggleLike();
   const viewRecorded = useRef(false);
 
-  // Scroll & Like states
+  // States
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hasLiked, setHasLiked] = useState(false);
   const [animateClap, setAnimateClap] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{
+    src: string;
+    alt: string;
+  } | null>(null);
+
+  // Handle lightbox for images in content
+  useEffect(() => {
+    if (!article?.content) return;
+
+    // Timeout to ensure content is rendered
+    const timer = setTimeout(() => {
+      const articleContent = document.querySelector(".prose");
+      if (!articleContent) return;
+
+      const images = articleContent.querySelectorAll("img");
+      const handlers: (() => void)[] = [];
+
+      images.forEach((img) => {
+        const handler = () => {
+          setSelectedImage({ src: img.src, alt: img.alt });
+        };
+        img.addEventListener("click", handler);
+        img.style.cursor = "zoom-in";
+        handlers.push(handler);
+      });
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [article?.content]);
 
   // Update scroll progress
   useEffect(() => {
@@ -316,6 +348,46 @@ export default function ArticleDetailPage() {
         </div>
       </div>
 
+      {/* ── Next/Prev Navigation ── */}
+      {article?.navigation &&
+        (article.navigation.prev || article.navigation.next) && (
+          <section className="mx-auto max-w-3xl px-4 py-8 border-t sm:px-6">
+            <div className="grid grid-cols-2 gap-4">
+              {article.navigation.prev ? (
+                <Link
+                  to={`/artikel/${article.navigation.prev.slug}`}
+                  className="group flex flex-col gap-2 p-4 rounded-xl border bg-muted/30 hover:border-primary hover:bg-background transition-all"
+                >
+                  <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground">
+                    <ChevronLeft className="h-3 w-3" /> Sebelumnya
+                  </span>
+                  <span className="font-medium line-clamp-2 text-sm group-hover:text-primary transition-colors">
+                    {article.navigation.prev.title}
+                  </span>
+                </Link>
+              ) : (
+                <div />
+              )}
+
+              {article.navigation.next ? (
+                <Link
+                  to={`/artikel/${article.navigation.next.slug}`}
+                  className="group flex flex-col gap-2 p-4 text-right rounded-xl border bg-muted/30 hover:border-primary hover:bg-background transition-all"
+                >
+                  <span className="flex items-center justify-end gap-1 text-[10px] uppercase tracking-wider text-muted-foreground">
+                    Berikutnya <ChevronRight className="h-3 w-3" />
+                  </span>
+                  <span className="font-medium line-clamp-2 text-sm group-hover:text-primary transition-colors">
+                    {article.navigation.next.title}
+                  </span>
+                </Link>
+              ) : (
+                <div />
+              )}
+            </div>
+          </section>
+        )}
+
       {/* Related Articles */}
       {related && related.length > 0 && (
         <section className="border-t bg-muted/20">
@@ -328,6 +400,15 @@ export default function ArticleDetailPage() {
             </div>
           </div>
         </section>
+      )}
+
+      {/* ── Image Lightbox Overlay ── */}
+      {selectedImage && (
+        <ImageLightbox
+          src={selectedImage.src}
+          alt={selectedImage.alt}
+          onClose={() => setSelectedImage(null)}
+        />
       )}
     </article>
   );

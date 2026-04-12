@@ -39,6 +39,10 @@ export interface Article {
   author: Pick<User, 'id' | 'name'>;
   categoryId: string;
   category: Pick<Category, 'id' | 'name' | 'slug' | 'color'>;
+  navigation?: {
+    prev: { slug: string; title: string } | null;
+    next: { slug: string; title: string } | null;
+  };
 }
 
 export interface ArticleStats {

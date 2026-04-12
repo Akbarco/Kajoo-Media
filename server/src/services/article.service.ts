@@ -92,7 +92,30 @@ export async function getArticleBySlug(slug: string) {
     throw new AppError(404, 'NOT_FOUND', 'Artikel tidak ditemukan.');
   }
 
-  return article;
+  // Fetch adjacent articles for navigation
+  const [prev, next] = await Promise.all([
+    prisma.article.findFirst({
+      where: {
+        publishedAt: { lt: article.publishedAt || article.createdAt },
+        status: 'PUBLISHED',
+      },
+      orderBy: { publishedAt: 'desc' },
+      select: { slug: true, title: true }
+    }),
+    prisma.article.findFirst({
+      where: {
+        publishedAt: { gt: article.publishedAt || article.createdAt },
+        status: 'PUBLISHED',
+      },
+      orderBy: { publishedAt: 'asc' },
+      select: { slug: true, title: true }
+    }),
+  ]);
+
+  return {
+    ...article,
+    navigation: { prev, next }
+  };
 }
 
 export async function getFeaturedArticles() {
