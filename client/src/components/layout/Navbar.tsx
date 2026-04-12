@@ -5,6 +5,7 @@ import { useThemeStore } from '@/store/themeStore';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Logo from '@/components/brand/Logo';
+import WeatherWidget from "../common/WeatherWidget";
 
 export default function Navbar() {
   const location = useLocation();
@@ -15,8 +16,20 @@ export default function Navbar() {
   const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {/* ── Top Bar (Informational) ── */}
+      <div className="hidden border-b py-1 sm:block bg-background/50">
+        <div className="container mx-auto flex max-w-7xl justify-between px-4 sm:px-6 lg:px-8">
+          <WeatherWidget />
+          <div className="flex items-center gap-4 text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">
+            <span>Kajoo Media Network</span>
+            <span className="h-1 w-1 rounded-full bg-primary/40" />
+            <span>Berita Terkini</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <Logo className="h-7 w-7" />
@@ -42,35 +55,37 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-1">
-          {/* Theme toggle */}
+          {/* Theme Toggle */}
           <Button
             variant="ghost"
             size="icon"
             className="rounded-full"
-            onClick={() => setTheme(isDark ? 'light' : 'dark')}
+            onClick={() => setTheme(isDark ? "light" : "dark")}
             aria-label="Toggle theme"
           >
             {isDark ? (
-              <Sun className="h-[18px] w-[18px] transition-transform" />
+              <Sun className="h-4.5 w-4.5 transition-transform" />
             ) : (
-              <Moon className="h-[18px] w-[18px] transition-transform" />
+              <Moon className="h-4.5 w-4.5 transition-transform" />
             )}
           </Button>
 
           {/* Search button */}
           <Link to="/search">
             <Button variant="ghost" size="icon" className="rounded-full">
-              <Search className="h-[18px] w-[18px]" />
+              <Search className="h-4.5 w-4.5" />
             </Button>
           </Link>
 
           {/* Mobile menu */}
           <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full md:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
+            <SheetTrigger
+              render={
+                <Button variant="ghost" size="icon" className="rounded-full md:hidden">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              }
+            />
             <SheetContent side="right" className="w-72">
               <div className="mt-8 flex flex-col gap-1">
                 <Link

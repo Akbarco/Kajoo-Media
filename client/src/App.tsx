@@ -20,6 +20,7 @@ import DashboardPage from '@/pages/admin/DashboardPage';
 import ArticleListPage from '@/pages/admin/ArticleListPage';
 import ArticleFormPage from '@/pages/admin/ArticleFormPage';
 import CategoryListPage from '@/pages/admin/CategoryListPage';
+import CommentListPage from '@/pages/admin/CommentListPage';
 import SettingsPage from '@/pages/admin/SettingsPage';
 
 import { HelmetProvider } from 'react-helmet-async';
@@ -58,6 +59,7 @@ function App() {
                 <Route path="artikel/baru" element={<ArticleFormPage />} />
                 <Route path="artikel/:id/edit" element={<ArticleFormPage />} />
                 <Route path="kategori" element={<CategoryListPage />} />
+                <Route path="komentar" element={<CommentListPage />} />
                 <Route path="settings" element={<SettingsPage />} />
               </Route>
             </Routes>

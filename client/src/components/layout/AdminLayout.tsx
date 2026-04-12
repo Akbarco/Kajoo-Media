@@ -9,6 +9,7 @@ import {
   PenSquare,
   Sun,
   Moon,
+  MessageCircle,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useThemeStore } from '@/store/themeStore';
@@ -21,6 +22,7 @@ const navItems = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
   { label: 'Artikel', icon: FileText, path: '/admin/artikel' },
   { label: 'Kategori', icon: Tags, path: '/admin/kategori' },
+  { label: 'Komentar', icon: MessageCircle, path: '/admin/komentar' },
   { label: 'Pengaturan', icon: Settings, path: '/admin/settings' },
 ];
 

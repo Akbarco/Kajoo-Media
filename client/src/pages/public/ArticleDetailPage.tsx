@@ -5,10 +5,12 @@ import {
   useRecordView,
   useToggleLike,
 } from "@/hooks/useArticles";
+import type { Comment } from "@/lib/types";
 import ArticleCard from "@/components/articles/ArticleCard";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import {
   Clock,
   Eye,
@@ -18,6 +20,7 @@ import {
   Share2,
   ChevronLeft,
   ChevronRight,
+  MessageCircle,
 } from "lucide-react";
 import { formatDate, getReadingTime, formatNumber } from "@/lib/helpers";
 import { useState, useEffect, useRef } from "react";
@@ -45,6 +48,33 @@ export default function ArticleDetailPage() {
     src: string;
     alt: string;
   } | null>(null);
+
+  // Comments state
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentsIsLoading, setCommentsIsLoading] = useState(true);
+  const [refreshComments, setRefreshComments] = useState(0);
+
+  // Fetch comments
+  useEffect(() => {
+    if (!article?.id) return;
+
+    const fetchComments = async () => {
+      try {
+        setCommentsIsLoading(true);
+        const res = await fetch(`/api/v1/comments/${article.id}`);
+        const result = await res.json();
+        if (result.success) {
+          setComments(result.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch comments", err);
+      } finally {
+        setCommentsIsLoading(false);
+      }
+    };
+
+    fetchComments();
+  }, [article?.id, refreshComments]);
 
   // Handle lightbox for images in content
   useEffect(() => {
@@ -387,6 +417,122 @@ export default function ArticleDetailPage() {
             </div>
           </section>
         )}
+
+      {/* ── Comments Section ── */}
+      <section className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+        <h2 className="mb-8 flex items-center gap-3 font-serif text-2xl">
+          <MessageCircle className="h-6 w-6" /> Suara Pembaca
+        </h2>
+
+        {/* Comment Form */}
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const name = formData.get("name") as string;
+            const content = formData.get("content") as string;
+
+            if (!name || !content) {
+              toast.error("Nama dan isi komentar wajib diisi!");
+              return;
+            }
+
+            try {
+              const res = await fetch(`/api/v1/comments/${article.id}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, content }),
+              });
+
+              if (res.ok) {
+                toast.success("Komentar berhasil dikirim!");
+                (e.target as HTMLFormElement).reset();
+                // Refresh comments
+                setRefreshComments((prev) => prev + 1);
+              }
+            } catch {
+              toast.error("Gagal mengirim komentar.");
+            }
+          }}
+          className="mb-12 space-y-4 rounded-2xl border bg-muted/20 p-6"
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Nama Lengkap
+              </label>
+              <input
+                name="name"
+                placeholder="Masukkan namamu..."
+                className="w-full rounded-lg border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none transition-colors"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Pesan / Opini
+            </label>
+            <textarea
+              name="content"
+              placeholder="Tulis pendapatmu di sini..."
+              rows={4}
+              className="w-full rounded-lg border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none transition-colors resize-none"
+            />
+          </div>
+          <Button type="submit" className="w-full sm:w-auto px-8">
+            Kirim Komentar
+          </Button>
+        </form>
+
+        {/* Comments List */}
+        <div className="space-y-6">
+          {commentsIsLoading ? (
+            <div className="space-y-6">
+              {[1, 2].map((i) => (
+                <div key={i} className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <Skeleton className="h-4 w-32" />
+                  </div>
+                  <Skeleton className="h-20 w-full rounded-xl" />
+                </div>
+              ))}
+            </div>
+          ) : comments && comments.length > 0 ? (
+            comments.map((comment) => (
+              <div
+                key={comment.id}
+                className="group relative space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 font-serif font-bold text-primary uppercase">
+                    {comment.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold">{comment.name}</h4>
+                    <p className="text-[10px] text-muted-foreground">
+                      {new Date(comment.createdAt).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+                <div className="rounded-2xl rounded-tl-none border bg-background p-4 text-sm leading-relaxed shadow-sm transition-shadow group-hover:shadow-md">
+                  {comment.content}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="py-12 text-center text-muted-foreground italic border-t border-dashed">
+              Belum ada komentar. Jadi yang pertama berdiskusi!
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Related Articles */}
       {related && related.length > 0 && (

@@ -45,6 +45,14 @@ export interface Article {
   };
 }
 
+export interface Comment {
+  id: string;
+  name: string;
+  content: string;
+  createdAt: string;
+  articleId: string;
+}
+
 export interface ArticleStats {
   total: number;
   published: number;
@@ -52,6 +60,7 @@ export interface ArticleStats {
   thisMonth: number;
   totalViews: number;
   totalLikes: number;
+  recentComments?: Comment[];
 }
 
 // ── API Response Types ──

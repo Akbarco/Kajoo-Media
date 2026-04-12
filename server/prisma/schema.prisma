@@ -56,9 +56,23 @@ model Article {
   categoryId String   @map("category_id")
   category   Category @relation(fields: [categoryId], references: [id])
 
+  comments   Comment[]
+
   @@index([title])
   @@index([status])
   @@index([categoryId])
   @@index([publishedAt])
   @@map("articles")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  articleId String   @map("article_id")
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId])
+  @@map("comments")
 }

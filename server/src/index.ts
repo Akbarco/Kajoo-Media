@@ -12,6 +12,7 @@ import path from 'path';
 import authRoutes from './routes/auth.routes';
 import articleRoutes from './routes/article.routes';
 import categoryRoutes from './routes/category.routes';
+import commentRoutes from './routes/comment.routes';
 import uploadRoutes from './routes/upload.routes';
 import { errorHandler } from './middlewares/errorHandler';
 
@@ -52,6 +53,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use('/api/v1/auth', authLimiter, authRoutes);
 app.use('/api/v1/articles', articleRoutes);
 app.use('/api/v1/categories', categoryRoutes);
+app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/upload', uploadRoutes);
 
 // ── Health Check ──

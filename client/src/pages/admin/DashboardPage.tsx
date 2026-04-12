@@ -6,8 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { FileText, Tags, Calendar, FilePenLine, ArrowRight, Eye, Pencil, Heart } from 'lucide-react';
+import { FileText, Tags, Calendar, FilePenLine, ArrowRight, Eye, Pencil, Heart, MessageCircle } from 'lucide-react';
 import { formatDateShort, formatNumber } from '@/lib/helpers';
+import type { Comment } from '@/lib/types';
 
 export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useArticleStats();
@@ -119,6 +120,43 @@ export default function DashboardPage() {
               </TableBody>
             </Table>
           )}
+        </CardContent>
+      </Card>
+      
+      {/* ── Recent Comments ── */}
+      <Card className="col-span-full border-primary/10 bg-card/30 backdrop-blur-md">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <MessageCircle className="h-4 w-4 text-primary" />
+            <CardTitle>Komentar Terbaru</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {stats?.recentComments && stats.recentComments.length > 0 ? (
+              stats.recentComments.map((comment: Comment) => (
+                <div key={comment.id} className="flex items-start gap-4 rounded-lg border bg-muted/20 p-3 text-sm">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 font-bold text-primary">
+                    {comment.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-foreground">{comment.name}</span>
+                      <span className="text-[10px] text-muted-foreground">{formatDateShort(comment.createdAt)}</span>
+                    </div>
+                    <p className="line-clamp-1 text-muted-foreground">{comment.content}</p>
+                    <Link to="/admin/komentar" className="text-[10px] text-primary hover:underline italic">
+                      Detail moderasi
+                    </Link>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-8 text-center text-xs text-muted-foreground italic">
+                Belum ada komentar baru.
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
