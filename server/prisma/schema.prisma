@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now()) @map("created_at")
+  articles  Article[]
+
+  @@map("users")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  color       String?
+  description String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  articles    Article[]
+
+  @@map("categories")
+}
+
+model Article {
+  id          String        @id @default(uuid())
+  title       String
+  slug        String        @unique
+  excerpt     String?
+  content     String
+  thumbnail   String?
+  status      ArticleStatus @default(DRAFT)
+  isFeatured  Boolean       @default(false) @map("is_featured")
+  publishedAt DateTime?     @map("published_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  authorId   String   @map("author_id")
+  author     User     @relation(fields: [authorId], references: [id])
+
+  categoryId String   @map("category_id")
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@index([title])
+  @@index([status])
+  @@index([categoryId])
+  @@index([publishedAt])
+  @@map("articles")
+}

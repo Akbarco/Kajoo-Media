@@ -1,0 +1,466 @@
+{
+  "info": {
+    "name": "Media Kajo API",
+    "description": "API Collection untuk Media Kajo - Digital News Portal & CMS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.token) {",
+                  "    pm.collectionVariables.set('token', res.data.token);",
+                  "    console.log('Token saved!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@mediakajo.id\",\n  \"password\": \"MediaKajo2026!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login admin dan simpan token otomatis ke collection variable."
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Ambil data user yang sedang login. Butuh token."
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin Media Kajo\",\n  \"email\": \"admin@mediakajo.id\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
+            },
+            "description": "Update nama/email profil admin."
+          }
+        },
+        {
+          "name": "Update Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"MediaKajo2026!\",\n  \"newPassword\": \"NewPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
+            },
+            "description": "Ubah password admin. HATI-HATI: ini akan mengubah password asli."
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Logout dan hapus cookie session."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📰 Articles",
+      "item": [
+        {
+          "name": "List Articles (Public)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles?status=PUBLISHED&page=1&limit=12&sort=newest",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles"],
+              "query": [
+                { "key": "status", "value": "PUBLISHED" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "12" },
+                { "key": "sort", "value": "newest" }
+              ]
+            },
+            "description": "List semua artikel published. Bisa filter, search, pagination."
+          }
+        },
+        {
+          "name": "List Articles by Category",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles?category=teknologi&status=PUBLISHED&page=1&limit=12",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles"],
+              "query": [
+                { "key": "category", "value": "teknologi" },
+                { "key": "status", "value": "PUBLISHED" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "12" }
+              ]
+            },
+            "description": "List artikel berdasarkan slug kategori."
+          }
+        },
+        {
+          "name": "Search Articles",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles?search=AI&status=PUBLISHED",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles"],
+              "query": [
+                { "key": "search", "value": "AI" },
+                { "key": "status", "value": "PUBLISHED" }
+              ]
+            },
+            "description": "Cari artikel berdasarkan keyword di judul, konten, atau excerpt."
+          }
+        },
+        {
+          "name": "List All Articles (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles?page=1&limit=15",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "15" }
+              ]
+            },
+            "description": "List semua artikel (termasuk DRAFT) untuk admin. Butuh token."
+          }
+        },
+        {
+          "name": "Get Featured Articles",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles/featured",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles", "featured"]
+            },
+            "description": "Ambil artikel yang ditandai sebagai featured (hero section)."
+          }
+        },
+        {
+          "name": "Get Article Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles", "stats"]
+            },
+            "description": "Statistik artikel: total, published, draft, bulan ini. Butuh token."
+          }
+        },
+        {
+          "name": "Get Article by Slug",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles/revolusi-ai-di-tahun-2026",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles", "revolusi-ai-di-tahun-2026"]
+            },
+            "description": "Detail artikel berdasarkan slug URL."
+          }
+        },
+        {
+          "name": "Get Related Articles",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles/:articleId/related/:categoryId",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles", ":articleId", "related", ":categoryId"],
+              "variable": [
+                { "key": "articleId", "value": "PASTE_ARTICLE_ID_HERE" },
+                { "key": "categoryId", "value": "PASTE_CATEGORY_ID_HERE" }
+              ]
+            },
+            "description": "Ambil artikel terkait (same category, exclude current). Ganti :articleId dan :categoryId dengan ID asli."
+          }
+        },
+        {
+          "name": "Create Article",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Artikel Test dari Postman\",\n  \"content\": \"<p>Ini adalah konten artikel yang dibuat melalui Postman untuk testing API.</p><h2>Sub Heading</h2><p>Paragraph kedua dengan <strong>bold text</strong> dan <em>italic text</em>.</p>\",\n  \"categoryId\": \"PASTE_CATEGORY_ID_HERE\",\n  \"excerpt\": \"Artikel test untuk memastikan API berjalan dengan benar.\",\n  \"thumbnail\": \"https://images.unsplash.com/photo-1504711434969-e33886168d3c?w=800&q=80\",\n  \"status\": \"DRAFT\",\n  \"isFeatured\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/articles",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles"]
+            },
+            "description": "Buat artikel baru. Ganti categoryId dengan ID kategori asli dari GET Categories. Butuh token."
+          }
+        },
+        {
+          "name": "Update Article",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Artikel Test (Updated)\",\n  \"status\": \"PUBLISHED\",\n  \"isFeatured\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/articles/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles", ":id"],
+              "variable": [
+                { "key": "id", "value": "PASTE_ARTICLE_ID_HERE" }
+              ]
+            },
+            "description": "Update artikel. Ganti :id dengan article ID. Bisa partial update. Butuh token."
+          }
+        },
+        {
+          "name": "Delete Article",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["articles", ":id"],
+              "variable": [
+                { "key": "id", "value": "PASTE_ARTICLE_ID_HERE" }
+              ]
+            },
+            "description": "Hapus artikel. Ganti :id dengan article ID. IRREVERSIBLE! Butuh token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Categories",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            },
+            "description": "List semua kategori dengan jumlah artikel masing-masing."
+          }
+        },
+        {
+          "name": "Get Category by Slug",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/teknologi",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", "teknologi"]
+            },
+            "description": "Detail kategori berdasarkan slug."
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Edukasi\",\n  \"color\": \"#8B5CF6\",\n  \"description\": \"Artikel tentang pendidikan dan pembelajaran\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            },
+            "description": "Buat kategori baru. Slug otomatis di-generate dari nama. Butuh token."
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Edukasi & Sains\",\n  \"color\": \"#7C3AED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                { "key": "id", "value": "PASTE_CATEGORY_ID_HERE" }
+              ]
+            },
+            "description": "Update kategori. Ganti :id. Butuh token."
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                { "key": "id", "value": "PASTE_CATEGORY_ID_HERE" }
+              ]
+            },
+            "description": "Hapus kategori. Gagal jika masih ada artikel di kategori ini. Butuh token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 Upload",
+      "item": [
+        {
+          "name": "Upload Image",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "",
+                  "description": "Pilih file gambar (JPG, PNG, WebP, max 5MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["upload"]
+            },
+            "description": "Upload gambar untuk thumbnail artikel. Return URL gambar. Butuh token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "❤️ Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Cek apakah server berjalan."
+          }
+        }
+      ]
+    }
+  ]
+}
