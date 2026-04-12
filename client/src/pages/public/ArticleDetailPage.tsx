@@ -280,6 +280,9 @@ export default function ArticleDetailPage() {
             src={article.thumbnail}
             alt={article.title}
             className="w-full rounded-xl object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'https://placehold.co/1200x630/1e293b/white?text=Media+Kajo';
+            }}
           />
         </div>
       )}

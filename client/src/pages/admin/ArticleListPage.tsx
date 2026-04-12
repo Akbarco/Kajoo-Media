@@ -69,7 +69,14 @@ export default function ArticleListPage() {
                   <TableCell>
                     <div className="flex items-center gap-3">
                       {article.thumbnail && (
-                        <img src={article.thumbnail} alt="" className="h-10 w-14 rounded object-cover" />
+                        <img 
+                          src={article.thumbnail} 
+                          alt="" 
+                          className="h-10 w-14 rounded object-cover bg-muted" 
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://placehold.co/400x300/1e293b/white?text=Media+Kajo';
+                          }}
+                        />
                       )}
                       <span className="max-w-xs truncate font-medium">{article.title}</span>
                     </div>

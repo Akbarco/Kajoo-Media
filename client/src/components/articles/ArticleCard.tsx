@@ -23,6 +23,9 @@ export default function ArticleCard({ article, variant = 'default' }: ArticleCar
               alt={article.title}
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://placehold.co/400x300/1e293b/white?text=Media+Kajo';
+              }}
             />
           </div>
         )}
@@ -60,6 +63,9 @@ export default function ArticleCard({ article, variant = 'default' }: ArticleCar
               src={article.thumbnail}
               alt={article.title}
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://placehold.co/1200x600/1e293b/white?text=Media+Kajo';
+              }}
             />
           ) : (
             <div className="flex h-full items-center justify-center bg-gradient-to-br from-muted to-muted/50">
@@ -106,6 +112,9 @@ export default function ArticleCard({ article, variant = 'default' }: ArticleCar
             alt={article.title}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'https://placehold.co/800x450/1e293b/white?text=Media+Kajo';
+            }}
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-gradient-to-br from-muted to-muted/50">
