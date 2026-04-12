@@ -4,9 +4,11 @@ import ArticleCard from '@/components/articles/ArticleCard';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, Eye, Heart } from 'lucide-react';
+import { ArrowLeft, Clock, Eye, Heart, Twitter, Facebook, MessageCircle, Link2, Share2 } from 'lucide-react';
 import { formatDate, getReadingTime, formatNumber } from '@/lib/helpers';
 import { useState, useEffect, useRef } from 'react';
+import SEO from '@/components/common/SEO';
+import { toast } from 'sonner';
 
 export default function ArticleDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -85,6 +87,26 @@ export default function ArticleDetailPage() {
     }
   };
 
+  const shareUrl = window.location.href;
+  const shareText = `Baca artikel menarik ini: ${article?.title}`;
+
+  const handleShare = (platform: 'wa' | 'tw' | 'fb') => {
+    let url = '';
+    if (platform === 'wa') url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+    if (platform === 'tw') url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    if (platform === 'fb') url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    
+    window.open(url, '_blank', 'width=600,height=400');
+  };
+
+  const [copySuccess, setCopySuccess] = useState(false);
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    setCopySuccess(true);
+    toast.success('Link berhasil disalin!');
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
+
   if (isLoading) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
@@ -120,6 +142,12 @@ export default function ArticleDetailPage() {
 
   return (
     <article className="animate-fade-in">
+      <SEO
+        title={article.title}
+        description={article.excerpt || undefined}
+        image={article.thumbnail || undefined}
+        type="article"
+      />
       {/* ── Reading Progress Bar ── */}
       <div className="fixed top-0 left-0 z-[60] h-1 w-full bg-transparent">
         <div
@@ -189,6 +217,38 @@ export default function ArticleDetailPage() {
         />
       </div>
 
+      {/* ── Floating Side Share (Desktop) ── */}
+      <div className="fixed left-8 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-4 lg:flex">
+        <button
+          onClick={() => handleShare('wa')}
+          className="group flex h-10 w-10 items-center justify-center rounded-full bg-background border text-muted-foreground transition-all hover:border-green-500 hover:text-green-500 hover:shadow-md"
+          title="Bagikan ke WhatsApp"
+        >
+          <MessageCircle className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => handleShare('tw')}
+          className="group flex h-10 w-10 items-center justify-center rounded-full bg-background border text-muted-foreground transition-all hover:border-sky-500 hover:text-sky-500 hover:shadow-md"
+          title="Bagikan ke Twitter"
+        >
+          <Twitter className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => handleShare('fb')}
+          className="group flex h-10 w-10 items-center justify-center rounded-full bg-background border text-muted-foreground transition-all hover:border-blue-600 hover:text-blue-600 hover:shadow-md"
+          title="Bagikan ke Facebook"
+        >
+          <Facebook className="h-5 w-5" />
+        </button>
+        <button
+          onClick={handleCopyLink}
+          className={`flex h-10 w-10 items-center justify-center rounded-full bg-background border transition-all hover:shadow-md ${copySuccess ? 'border-green-500 text-green-500' : 'text-muted-foreground hover:border-primary hover:text-primary'}`}
+          title="Salin Link"
+        >
+          <Link2 className="h-5 w-5" />
+        </button>
+      </div>
+
       {/* Engagement Bar */}
       <div className="sticky bottom-6 z-10 mx-auto flex max-w-3xl justify-center px-4 sm:px-6">
         <div className="inline-flex items-center gap-1 rounded-full border bg-background/80 px-2 py-1.5 shadow-lg backdrop-blur-md">
@@ -212,6 +272,14 @@ export default function ArticleDetailPage() {
             <Eye className="h-4 w-4" />
             <span>{formatNumber(article.views)}</span>
           </div>
+          <div className="h-6 w-px bg-border lg:hidden" />
+          <button
+            onClick={handleCopyLink}
+            className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted lg:hidden"
+            title="Bagikan"
+          >
+            <Share2 className="h-4 w-4" />
+          </button>
         </div>
       </div>
 

@@ -5,6 +5,7 @@ import ArticleCard from '@/components/articles/ArticleCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import SEO from '@/components/common/SEO';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -21,6 +22,10 @@ export default function CategoryPage() {
 
   return (
     <div className="animate-fade-in">
+      <SEO 
+        title={category?.name} 
+        description={category?.description || undefined} 
+      />
       {/* Category Header */}
       <section className="border-b bg-muted/30">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">

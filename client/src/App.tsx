@@ -12,6 +12,7 @@ import HomePage from '@/pages/public/HomePage';
 import CategoryPage from '@/pages/public/CategoryPage';
 import ArticleDetailPage from '@/pages/public/ArticleDetailPage';
 import SearchPage from '@/pages/public/SearchPage';
+import NotFoundPage from '@/pages/public/NotFoundPage';
 
 // Admin Pages
 import LoginPage from '@/pages/admin/LoginPage';
@@ -20,6 +21,8 @@ import ArticleListPage from '@/pages/admin/ArticleListPage';
 import ArticleFormPage from '@/pages/admin/ArticleFormPage';
 import CategoryListPage from '@/pages/admin/CategoryListPage';
 import SettingsPage from '@/pages/admin/SettingsPage';
+
+import { HelmetProvider } from 'react-helmet-async';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,33 +36,36 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Portal */}
-            <Route element={<PublicLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/kategori/:slug" element={<CategoryPage />} />
-              <Route path="/artikel/:slug" element={<ArticleDetailPage />} />
-              <Route path="/search" element={<SearchPage />} />
-            </Route>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public Portal */}
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/kategori/:slug" element={<CategoryPage />} />
+                <Route path="/artikel/:slug" element={<ArticleDetailPage />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
 
-            {/* Admin CMS */}
-            <Route path="/admin/login" element={<LoginPage />} />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<DashboardPage />} />
-              <Route path="artikel" element={<ArticleListPage />} />
-              <Route path="artikel/baru" element={<ArticleFormPage />} />
-              <Route path="artikel/:id/edit" element={<ArticleFormPage />} />
-              <Route path="kategori" element={<CategoryListPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-        <Toaster position="top-right" richColors closeButton />
-      </TooltipProvider>
-    </QueryClientProvider>
+              {/* Admin CMS */}
+              <Route path="/admin/login" element={<LoginPage />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="artikel" element={<ArticleListPage />} />
+                <Route path="artikel/baru" element={<ArticleFormPage />} />
+                <Route path="artikel/:id/edit" element={<ArticleFormPage />} />
+                <Route path="kategori" element={<CategoryListPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+          <Toaster position="top-right" richColors closeButton />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 

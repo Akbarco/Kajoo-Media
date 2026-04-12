@@ -4,6 +4,7 @@ import { useCategories } from '@/hooks/useCategories';
 import ArticleCard from '@/components/articles/ArticleCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowRight } from 'lucide-react';
+import SEO from '@/components/common/SEO';
 
 export default function HomePage() {
   const { data: featured, isLoading: featuredLoading } = useFeaturedArticles();
@@ -15,6 +16,7 @@ export default function HomePage() {
 
   return (
     <div className="animate-fade-in">
+      <SEO />
       {/* ── Hero Section ── */}
       <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {featuredLoading ? (
