@@ -60,6 +60,7 @@ export async function getArticles(params: GetArticlesParams) {
       include: {
         author: { select: { id: true, name: true } },
         category: { select: { id: true, name: true, slug: true, color: true } },
+        _count: { select: { comments: true } },
       },
       orderBy,
       skip,

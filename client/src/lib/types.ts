@@ -43,6 +43,9 @@ export interface Article {
     prev: { slug: string; title: string } | null;
     next: { slug: string; title: string } | null;
   };
+  _count?: {
+    comments: number;
+  };
 }
 
 export interface Comment {
