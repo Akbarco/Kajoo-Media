@@ -20,9 +20,22 @@ export default function ArticleDetailPage() {
   const toggleLike = useToggleLike();
   const viewRecorded = useRef(false);
 
-  // Like state from localStorage
+  // Scroll & Like states
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [hasLiked, setHasLiked] = useState(false);
   const [animateClap, setAnimateClap] = useState(false);
+
+  // Update scroll progress
+  useEffect(() => {
+    const updateScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (window.scrollY / scrollHeight) * 100;
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', updateScroll);
+    return () => window.removeEventListener('scroll', updateScroll);
+  }, []);
 
   // Scroll to top when slug changes
   useEffect(() => {
@@ -107,6 +120,14 @@ export default function ArticleDetailPage() {
 
   return (
     <article className="animate-fade-in">
+      {/* ── Reading Progress Bar ── */}
+      <div className="fixed top-0 left-0 z-[60] h-1 w-full bg-transparent">
+        <div
+          className="h-full bg-gradient-to-r from-primary/40 via-primary to-primary transition-all duration-75 ease-out"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
+
       {/* Article Header */}
       <header className="mx-auto max-w-3xl px-4 pt-10 sm:px-6">
         <Link
