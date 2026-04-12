@@ -81,19 +81,19 @@ export default function ArticleCard({ article, variant = 'default' }: ArticleCar
           >
             {article.category.name}
           </Badge>
-          <h2 className="font-serif text-2xl leading-tight sm:text-3xl lg:text-4xl">
+          <h2 className="line-clamp-2 font-serif text-xl leading-tight sm:text-2xl lg:text-3xl">
             {article.title}
           </h2>
           {article.excerpt && (
-            <p className="mt-2 line-clamp-2 text-sm text-white/80 sm:text-base">{article.excerpt}</p>
+            <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-white/80 sm:text-sm">{article.excerpt}</p>
           )}
-          <div className="mt-3 flex items-center gap-2 text-xs text-white/60 sm:text-sm">
-            <span>{article.author.name}</span>
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-white/60 sm:text-xs">
+            <span className="font-semibold text-white/90">{article.author.name}</span>
             <span>·</span>
             <span>{formatDateShort(article.publishedAt)}</span>
             <span>·</span>
-            <span>{readingTime} min read</span>
-            <span>·</span>
+            <span className="hidden sm:inline">{readingTime} min read</span>
+            <span className="hidden sm:inline">·</span>
             <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{formatNumber(article.views)}</span>
           </div>
         </div>
