@@ -12,6 +12,8 @@ router.get('/featured', articleController.getFeatured);
 router.get('/stats', authMiddleware, articleController.stats);
 router.get('/:slug', articleController.getBySlug);
 router.get('/:id/related/:categoryId', articleController.getRelated);
+router.post('/:slug/view', articleController.recordView);
+router.post('/:slug/like', articleController.like);
 
 // Protected routes
 router.post('/', authMiddleware, validate(createArticleSchema), articleController.create);

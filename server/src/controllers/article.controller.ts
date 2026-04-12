@@ -80,3 +80,22 @@ export async function stats(_req: Request, res: Response, next: NextFunction) {
     next(error);
   }
 }
+
+export async function recordView(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await articleService.incrementView(req.params.slug as string);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function like(req: Request, res: Response, next: NextFunction) {
+  try {
+    const delta = req.body.delta === -1 ? -1 : 1;
+    const result = await articleService.toggleLike(req.params.slug as string, delta as 1 | -1);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+}

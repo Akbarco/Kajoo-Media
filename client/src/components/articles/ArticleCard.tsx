@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { formatDateShort, getReadingTime } from '@/lib/helpers';
+import { formatDateShort, getReadingTime, formatNumber } from '@/lib/helpers';
 import type { Article } from '@/lib/types';
+import { Eye } from 'lucide-react';
 
 interface ArticleCardProps {
   article: Article;
@@ -42,6 +43,8 @@ export default function ArticleCard({ article, variant = 'default' }: ArticleCar
             <span>{article.author.name}</span>
             <span>·</span>
             <span>{formatDateShort(article.publishedAt)}</span>
+            <span>·</span>
+            <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{formatNumber(article.views)}</span>
           </div>
         </div>
       </Link>
@@ -84,6 +87,8 @@ export default function ArticleCard({ article, variant = 'default' }: ArticleCar
             <span>{formatDateShort(article.publishedAt)}</span>
             <span>·</span>
             <span>{readingTime} min read</span>
+            <span>·</span>
+            <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{formatNumber(article.views)}</span>
           </div>
         </div>
       </Link>
@@ -136,6 +141,8 @@ export default function ArticleCard({ article, variant = 'default' }: ArticleCar
           <span className="font-medium text-foreground/80">{article.author.name}</span>
           <span>·</span>
           <span>{formatDateShort(article.publishedAt)}</span>
+          <span>·</span>
+          <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{formatNumber(article.views)}</span>
         </div>
       </div>
     </Link>

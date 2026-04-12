@@ -253,6 +253,15 @@
   animation: fade-in 0.3s ease-out;
 }
 
+@keyframes clap-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+}
+
+.animate-clap {
+  animation: clap-bounce 0.3s ease-in-out;
+}
+
 /* ── Line clamp utilities ── */
 .line-clamp-2 {
   display: -webkit-box;

@@ -81,3 +81,20 @@ export function useDeleteArticle() {
     },
   });
 }
+
+export function useRecordView() {
+  return useMutation({
+    mutationFn: (slug: string) => articleService.recordView(slug),
+  });
+}
+
+export function useToggleLike() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ slug, delta }: { slug: string; delta: 1 | -1 }) =>
+      articleService.toggleLike(slug, delta),
+    onSuccess: (_, { slug }) => {
+      queryClient.invalidateQueries({ queryKey: ['article', slug] });
+    },
+  });
+}

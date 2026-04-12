@@ -30,6 +30,8 @@ export interface Article {
   thumbnail: string | null;
   status: ArticleStatus;
   isFeatured: boolean;
+  views: number;
+  likes: number;
   publishedAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -44,6 +46,8 @@ export interface ArticleStats {
   published: number;
   draft: number;
   thisMonth: number;
+  totalViews: number;
+  totalLikes: number;
 }
 
 // ── API Response Types ──

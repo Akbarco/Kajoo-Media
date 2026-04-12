@@ -132,6 +132,8 @@ async function main() {
         authorId: admin.id,
         categoryId: categories[categoryIndex].id,
         publishedAt: articleData.status === ArticleStatus.PUBLISHED ? new Date() : null,
+        views: Math.floor(Math.random() * 5000) + 100,
+        likes: Math.floor(Math.random() * 200) + 10,
       },
     });
   }

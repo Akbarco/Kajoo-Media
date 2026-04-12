@@ -1,11 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
-import { useArticle, useRelatedArticles } from '@/hooks/useArticles';
+import { useArticle, useRelatedArticles, useRecordView, useToggleLike } from '@/hooks/useArticles';
 import ArticleCard from '@/components/articles/ArticleCard';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock } from 'lucide-react';
-import { formatDate, getReadingTime } from '@/lib/helpers';
+import { ArrowLeft, Clock, Eye, Heart } from 'lucide-react';
+import { formatDate, getReadingTime, formatNumber } from '@/lib/helpers';
+import { useState, useEffect, useRef } from 'react';
 
 export default function ArticleDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -14,6 +15,62 @@ export default function ArticleDetailPage() {
     article?.id || '',
     article?.categoryId || ''
   );
+
+  const recordView = useRecordView();
+  const toggleLike = useToggleLike();
+  const viewRecorded = useRef(false);
+
+  // Like state from localStorage
+  const [hasLiked, setHasLiked] = useState(false);
+  const [animateClap, setAnimateClap] = useState(false);
+
+  // Scroll to top when slug changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
+
+  // Check localStorage on article load
+  useEffect(() => {
+    if (article?.slug) {
+      const isLiked = localStorage.getItem(`liked_${article.slug}`) === '1';
+      // Defer state update to avoid synchronous warning in some environments
+      const timeoutId = setTimeout(() => {
+        setHasLiked(isLiked);
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [article?.slug]);
+
+  // Auto-record view (once per session per article)
+  useEffect(() => {
+    if (article?.slug && slug && !viewRecorded.current) {
+      const key = `viewed_${slug}`;
+      if (!sessionStorage.getItem(key)) {
+        recordView.mutate(slug);
+        sessionStorage.setItem(key, '1');
+      }
+      viewRecorded.current = true;
+    }
+  }, [article?.slug, slug, recordView]);
+
+  const handleClap = () => {
+    if (!article?.slug) return;
+
+    setAnimateClap(true);
+    setTimeout(() => setAnimateClap(false), 300);
+
+    const articleSlug = article.slug;
+
+    if (hasLiked) {
+      toggleLike.mutate({ slug: articleSlug, delta: -1 });
+      localStorage.removeItem(`liked_${articleSlug}`);
+      setHasLiked(false);
+    } else {
+      toggleLike.mutate({ slug: articleSlug, delta: 1 });
+      localStorage.setItem(`liked_${articleSlug}`, '1');
+      setHasLiked(true);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -83,6 +140,10 @@ export default function ArticleDetailPage() {
           <span className="flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" /> {readingTime} min read
           </span>
+          <span>·</span>
+          <span className="flex items-center gap-1">
+            <Eye className="h-3.5 w-3.5" /> {formatNumber(article.views)}
+          </span>
         </div>
       </header>
 
@@ -105,6 +166,32 @@ export default function ArticleDetailPage() {
           className="article-content"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
+      </div>
+
+      {/* Engagement Bar */}
+      <div className="sticky bottom-6 z-10 mx-auto flex max-w-3xl justify-center px-4 sm:px-6">
+        <div className="inline-flex items-center gap-1 rounded-full border bg-background/80 px-2 py-1.5 shadow-lg backdrop-blur-md">
+          <button
+            onClick={handleClap}
+            className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
+              hasLiked
+                ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400'
+                : 'hover:bg-muted'
+            }`}
+          >
+            <Heart
+              className={`h-5 w-5 transition-transform ${animateClap ? 'animate-clap' : ''} ${
+                hasLiked ? 'fill-current' : ''
+              }`}
+            />
+            <span>{formatNumber(article.likes)}</span>
+          </button>
+          <div className="h-6 w-px bg-border" />
+          <div className="flex items-center gap-1.5 px-3 py-2 text-sm text-muted-foreground">
+            <Eye className="h-4 w-4" />
+            <span>{formatNumber(article.views)}</span>
+          </div>
+        </div>
       </div>
 
       {/* Related Articles */}

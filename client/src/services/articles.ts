@@ -56,4 +56,14 @@ export const articleService = {
   deleteArticle: async (id: string): Promise<void> => {
     await api.delete(`/articles/${id}`);
   },
+
+  recordView: async (slug: string): Promise<{ views: number }> => {
+    const res = await api.post<ApiResponse<{ views: number }>>(`/articles/${slug}/view`);
+    return res.data.data;
+  },
+
+  toggleLike: async (slug: string, delta: 1 | -1): Promise<{ likes: number }> => {
+    const res = await api.post<ApiResponse<{ likes: number }>>(`/articles/${slug}/like`, { delta });
+    return res.data.data;
+  },
 };

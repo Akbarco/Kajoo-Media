@@ -44,6 +44,12 @@ export async function getArticles(params: GetArticlesParams) {
     case 'title':
       orderBy = { title: 'asc' };
       break;
+    case 'popular':
+      orderBy = { views: 'desc' };
+      break;
+    case 'most-liked':
+      orderBy = { likes: 'desc' };
+      break;
     default: // newest
       orderBy = { publishedAt: 'desc' };
   }
@@ -199,7 +205,7 @@ export async function deleteArticle(id: string) {
 }
 
 export async function getArticleStats() {
-  const [total, published, draft, thisMonth] = await Promise.all([
+  const [total, published, draft, thisMonth, aggregates] = await Promise.all([
     prisma.article.count(),
     prisma.article.count({ where: { status: ArticleStatus.PUBLISHED } }),
     prisma.article.count({ where: { status: ArticleStatus.DRAFT } }),
@@ -210,7 +216,39 @@ export async function getArticleStats() {
         },
       },
     }),
+    prisma.article.aggregate({
+      _sum: { views: true, likes: true },
+    }),
   ]);
 
-  return { total, published, draft, thisMonth };
+  return {
+    total,
+    published,
+    draft,
+    thisMonth,
+    totalViews: aggregates._sum.views || 0,
+    totalLikes: aggregates._sum.likes || 0,
+  };
+}
+
+export async function incrementView(slug: string) {
+  return prisma.article.update({
+    where: { slug },
+    data: { views: { increment: 1 } },
+    select: { views: true },
+  });
+}
+
+export async function toggleLike(slug: string, delta: 1 | -1) {
+  const article = await prisma.article.findUnique({ where: { slug } });
+  if (!article) {
+    throw new AppError(404, 'NOT_FOUND', 'Artikel tidak ditemukan.');
+  }
+
+  const newLikes = Math.max(0, article.likes + delta);
+  return prisma.article.update({
+    where: { slug },
+    data: { likes: newLikes },
+    select: { likes: true },
+  });
 }

@@ -66,8 +66,8 @@ export default function Navbar() {
 
           {/* Mobile menu */}
           <Sheet>
-            <SheetTrigger className="md:hidden">
-              <Button variant="ghost" size="icon" className="rounded-full">
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full md:hidden">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>

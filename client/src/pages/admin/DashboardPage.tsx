@@ -6,8 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { FileText, Tags, Calendar, FilePenLine, ArrowRight, Eye, Pencil } from 'lucide-react';
-import { formatDateShort } from '@/lib/helpers';
+import { FileText, Tags, Calendar, FilePenLine, ArrowRight, Eye, Pencil, Heart } from 'lucide-react';
+import { formatDateShort, formatNumber } from '@/lib/helpers';
 
 export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useArticleStats();
@@ -15,10 +15,12 @@ export default function DashboardPage() {
   const { data: recentArticles, isLoading: articlesLoading } = useArticles({ limit: 5 });
 
   const metrics = [
-    { label: 'Total Artikel', value: stats?.total || 0, icon: FileText, color: 'text-blue-600 bg-blue-50' },
-    { label: 'Total Kategori', value: categories?.length || 0, icon: Tags, color: 'text-green-600 bg-green-50' },
-    { label: 'Artikel Bulan Ini', value: stats?.thisMonth || 0, icon: Calendar, color: 'text-amber-600 bg-amber-50' },
-    { label: 'Artikel Draft', value: stats?.draft || 0, icon: FilePenLine, color: 'text-purple-600 bg-purple-50' },
+    { label: 'Total Artikel', value: stats?.total || 0, icon: FileText, color: 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-950/50' },
+    { label: 'Total Kategori', value: categories?.length || 0, icon: Tags, color: 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-950/50' },
+    { label: 'Artikel Bulan Ini', value: stats?.thisMonth || 0, icon: Calendar, color: 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/50' },
+    { label: 'Artikel Draft', value: stats?.draft || 0, icon: FilePenLine, color: 'text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-950/50' },
+    { label: 'Total Views', value: formatNumber(stats?.totalViews || 0), icon: Eye, color: 'text-cyan-600 bg-cyan-50 dark:text-cyan-400 dark:bg-cyan-950/50' },
+    { label: 'Total Likes', value: formatNumber(stats?.totalLikes || 0), icon: Heart, color: 'text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/50' },
   ];
 
   return (
@@ -29,7 +31,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Metric Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {metrics.map((metric) => (
           <Card key={metric.label}>
             <CardContent className="flex items-center gap-4 p-5">

@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Plus, Eye, Pencil, Trash2, Loader2 } from 'lucide-react';
-import { formatDateShort } from '@/lib/helpers';
+import { Plus, Eye, Pencil, Trash2, Loader2, Heart } from 'lucide-react';
+import { formatDateShort, formatNumber } from '@/lib/helpers';
 import { toast } from 'sonner';
 
 export default function ArticleListPage() {
@@ -58,6 +58,7 @@ export default function ArticleListPage() {
                 <TableHead>Kategori</TableHead>
                 <TableHead>Penulis</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Engagement</TableHead>
                 <TableHead>Tanggal</TableHead>
                 <TableHead className="w-32">Aksi</TableHead>
               </TableRow>
@@ -87,6 +88,12 @@ export default function ArticleListPage() {
                     <Badge variant={article.status === 'PUBLISHED' ? 'default' : 'secondary'} className="text-[10px]">
                       {article.status === 'PUBLISHED' ? 'Published' : 'Draft'}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{formatNumber(article.views)}</span>
+                      <span className="flex items-center gap-1"><Heart className="h-3 w-3" />{formatNumber(article.likes)}</span>
+                    </div>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {formatDateShort(article.publishedAt || article.createdAt)}
