@@ -9,6 +9,7 @@ import type { Comment } from "@/lib/types";
 import ArticleCard from "@/components/articles/ArticleCard";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import AISummary from "@/components/articles/AISummary";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +28,8 @@ import { useState, useEffect, useRef } from "react";
 import SEO from "@/components/common/SEO";
 import { toast } from "sonner";
 import ImageLightbox from "@/components/common/ImageLightbox";
+import { useBookmarks } from "@/hooks/useBookmarks";
+import { Bookmark } from "lucide-react";
 
 export default function ArticleDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -38,6 +41,7 @@ export default function ArticleDetailPage() {
 
   const recordView = useRecordView();
   const toggleLike = useToggleLike();
+  const { toggleBookmark, isBookmarked } = useBookmarks();
   const viewRecorded = useRef(false);
 
   // States
@@ -288,6 +292,10 @@ export default function ArticleDetailPage() {
       )}
 
       <Separator className="mx-auto mt-8 max-w-3xl" />
+      
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
+        <AISummary articleId={article.id} />
+      </div>
 
       {/* Article Content */}
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
@@ -350,6 +358,20 @@ export default function ArticleDetailPage() {
       {/* Engagement Bar */}
       <div className="sticky bottom-6 z-10 mx-auto flex max-w-3xl justify-center px-4 sm:px-6">
         <div className="inline-flex items-center gap-1 rounded-full border bg-background/80 px-2 py-1.5 shadow-lg backdrop-blur-md">
+          <button
+            onClick={() => toggleBookmark(article)}
+            className={`flex items-center justify-center rounded-full p-2.5 transition-all ${
+              isBookmarked(article.id)
+                ? "bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400"
+                : "hover:bg-muted text-muted-foreground"
+            }`}
+            title={isBookmarked(article.id) ? "Hapus dari simpanan" : "Simpan artikel"}
+          >
+            <Bookmark
+              className={`h-5 w-5 ${isBookmarked(article.id) ? "fill-current" : ""}`}
+            />
+          </button>
+          <div className="h-6 w-px bg-border" />
           <button
             onClick={handleClap}
             className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${

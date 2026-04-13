@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Menu, Sun, Moon } from 'lucide-react';
+import { Search, Menu, Sun, Moon, Bookmark } from 'lucide-react';
 import { useCategories } from '@/hooks/useCategories';
 import { useThemeStore } from '@/store/themeStore';
 import { Button } from '@/components/ui/button';
@@ -77,14 +77,21 @@ export default function Navbar() {
             </Button>
           </Link>
 
+          {/* Bookmark link */}
+          <Link to="/simpan">
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <Bookmark className="h-4.5 w-4.5" />
+            </Button>
+          </Link>
+
           {/* Mobile menu */}
           <Sheet>
             <SheetTrigger
-              render={
-                <Button variant="ghost" size="icon" className="rounded-full md:hidden">
+              render={(props) => (
+                <Button variant="ghost" size="icon" className="rounded-full md:hidden" {...props}>
                   <Menu className="h-5 w-5" />
                 </Button>
-              }
+              )}
             />
             <SheetContent side="right" className="w-72">
               <div className="mt-8 flex flex-col gap-1">
@@ -109,6 +116,12 @@ export default function Navbar() {
                   className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors hover:bg-muted"
                 >
                   <Search className="h-4 w-4" /> Cari Artikel
+                </Link>
+                <Link
+                  to="/simpan"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors hover:bg-muted"
+                >
+                  <Bookmark className="h-4 w-4" /> Simpanan Saya
                 </Link>
                 <button
                   onClick={() => setTheme(isDark ? 'light' : 'dark')}

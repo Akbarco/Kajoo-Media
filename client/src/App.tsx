@@ -1,30 +1,31 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from '@/components/ui/sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Layouts
-import PublicLayout from '@/components/layout/PublicLayout';
-import AdminLayout from '@/components/layout/AdminLayout';
+import PublicLayout from "@/components/layout/PublicLayout";
+import AdminLayout from "@/components/layout/AdminLayout";
 
 // Public Pages
-import HomePage from '@/pages/public/HomePage';
-import CategoryPage from '@/pages/public/CategoryPage';
-import ArticleDetailPage from '@/pages/public/ArticleDetailPage';
-import SearchPage from '@/pages/public/SearchPage';
-import AllArticlesPage from '@/pages/public/AllArticlesPage';
-import NotFoundPage from '@/pages/public/NotFoundPage';
+import HomePage from "@/pages/public/HomePage";
+import CategoryPage from "@/pages/public/CategoryPage";
+import ArticleDetailPage from "@/pages/public/ArticleDetailPage";
+import SearchPage from "@/pages/public/SearchPage";
+import AllArticlesPage from "@/pages/public/AllArticlesPage";
+import SavedArticlesPage from "@/pages/public/SavedArticlesPage";
+import NotFoundPage from "@/pages/public/NotFoundPage";
 
 // Admin Pages
-import LoginPage from '@/pages/admin/LoginPage';
-import DashboardPage from '@/pages/admin/DashboardPage';
-import ArticleListPage from '@/pages/admin/ArticleListPage';
-import ArticleFormPage from '@/pages/admin/ArticleFormPage';
-import CategoryListPage from '@/pages/admin/CategoryListPage';
-import CommentListPage from '@/pages/admin/CommentListPage';
-import SettingsPage from '@/pages/admin/SettingsPage';
+import LoginPage from "@/pages/admin/LoginPage";
+import DashboardPage from "@/pages/admin/DashboardPage";
+import ArticleListPage from "@/pages/admin/ArticleListPage";
+import ArticleFormPage from "@/pages/admin/ArticleFormPage";
+import CategoryListPage from "@/pages/admin/CategoryListPage";
+import CommentListPage from "@/pages/admin/CommentListPage";
+import SettingsPage from "@/pages/admin/SettingsPage";
 
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from "react-helmet-async";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +51,7 @@ function App() {
                 <Route path="/artikel/:slug" element={<ArticleDetailPage />} />
                 <Route path="/artikel" element={<AllArticlesPage />} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/simpan" element={<SavedArticlesPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
 
