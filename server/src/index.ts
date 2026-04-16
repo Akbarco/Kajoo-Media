@@ -43,9 +43,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // ── Logging ──
-if (process.env.NODE_ENV !== 'production') {
-  app.use(morgan('dev'));
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   app.use(morgan('dev'));
+// }
 
 // ── Static Files (uploads) ──
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

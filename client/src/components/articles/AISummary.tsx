@@ -87,39 +87,39 @@ export default function AISummary({ articleId }: AISummaryProps) {
       {isExpanded && (
         <div className="animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="p-6">
-              {isLoading ? (
-                <div className="flex flex-col items-center justify-center py-8 gap-4">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="animate-pulse text-sm text-muted-foreground">
-                    AI sedang membaca dan menganalisis...
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-8 gap-4">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="animate-pulse text-sm text-muted-foreground">
+                  AI sedang membaca dan menganalisis...
+                </p>
+              </div>
+            ) : (
+              <div className="prose prose-sm dark:prose-invert max-w-none">
+                {summary?.split("\n").map((line, i) => (
+                  <p
+                    key={i}
+                    className="mb-2 leading-relaxed text-foreground/90"
+                  >
+                    {line}
                   </p>
-                </div>
-              ) : (
-                <div className="prose prose-sm dark:prose-invert max-w-none">
-                  {summary?.split("\n").map((line, i) => (
-                    <p
-                      key={i}
-                      className="mb-2 leading-relaxed text-foreground/90"
-                    >
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {!isLoading && (
-              <div className="bg-muted/10 px-6 py-2 text-right border-t">
-                <button
-                  onClick={handleSummarize}
-                  className="text-[10px] text-muted-foreground hover:text-primary transition-colors flex items-center justify-end gap-1 ml-auto"
-                >
-                  <Sparkles className="h-3 w-3" /> Regenerasi Rangkuman
-                </button>
+                ))}
               </div>
             )}
           </div>
-        )}
+
+          {!isLoading && (
+            <div className="bg-muted/10 px-6 py-2 text-right border-t">
+              <button
+                onClick={handleSummarize}
+                className="text-[10px] text-muted-foreground hover:text-primary transition-colors flex items-center justify-end gap-1 ml-auto"
+              >
+                <Sparkles className="h-3 w-3" /> Regenerasi Rangkuman
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
