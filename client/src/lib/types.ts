@@ -28,6 +28,7 @@ export interface Article {
   excerpt: string | null;
   content: string;
   thumbnail: string | null;
+  videoUrl: string | null;
   status: ArticleStatus;
   isFeatured: boolean;
   views: number;
@@ -104,6 +105,7 @@ export interface CreateArticleInput {
   categoryId: string;
   excerpt?: string | null;
   thumbnail?: string | null;
+  videoUrl?: string | null;
   status?: ArticleStatus;
   isFeatured?: boolean;
 }

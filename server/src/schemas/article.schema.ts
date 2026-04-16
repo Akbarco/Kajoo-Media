@@ -6,6 +6,7 @@ export const createArticleSchema = z.object({
   categoryId: z.string().uuid('Category ID tidak valid'),
   excerpt: z.string().max(300, 'Excerpt maksimal 300 karakter').optional().nullable(),
   thumbnail: z.string().optional().nullable(),
+  videoUrl: z.string().optional().nullable(),
   status: z.enum(['DRAFT', 'PUBLISHED']).optional(),
   isFeatured: z.boolean().optional(),
 });

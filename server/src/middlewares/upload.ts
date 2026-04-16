@@ -2,8 +2,11 @@ import multer from 'multer';
 import path from 'path';
 import crypto from 'crypto';
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = [
+  'image/jpeg', 'image/jpg', 'image/png', 'image/webp',
+  'video/mp4', 'video/webm', 'video/quicktime'
+];
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
@@ -20,7 +23,7 @@ const fileFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterC
   if (ALLOWED_TYPES.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Format file tidak didukung. Gunakan JPG, PNG, atau WebP.'));
+    cb(new Error('Format file tidak didukung. Gunakan JPG, PNG, WebP untuk gambar, atau MP4, WebM untuk video.'));
   }
 };
 

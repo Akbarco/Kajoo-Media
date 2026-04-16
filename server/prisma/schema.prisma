@@ -42,6 +42,7 @@ model Article {
   excerpt     String?
   content     String
   thumbnail   String?
+  videoUrl    String?@map("video_url")
   status      ArticleStatus @default(DRAFT)
   isFeatured  Boolean       @default(false) @map("is_featured")
   views       Int           @default(0)

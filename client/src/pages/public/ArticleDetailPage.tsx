@@ -277,19 +277,20 @@ export default function ArticleDetailPage() {
         </div>
       </header>
 
-      {/* Thumbnail */}
-      {article.thumbnail && (
-        <div className="mx-auto mt-8 max-w-4xl px-4 sm:px-6">
+      {/* Media Section (Thumbnail Only) */}
+      <div className="mx-auto mt-8 max-w-4xl px-4 sm:px-6">
+        {article.thumbnail && (
           <img
             src={article.thumbnail}
             alt={article.title}
-            className="w-full rounded-xl object-cover"
+            className="w-full rounded-2xl object-cover shadow-md"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = 'https://placehold.co/1200x630/1e293b/white?text=Media+Kajo';
+              (e.target as HTMLImageElement).src =
+                "https://placehold.co/1200x630/1e293b/white?text=Media+Kajo";
             }}
           />
-        </div>
-      )}
+        )}
+      </div>
 
       <Separator className="mx-auto mt-8 max-w-3xl" />
       
@@ -297,12 +298,46 @@ export default function ArticleDetailPage() {
         <AISummary articleId={article.id} />
       </div>
 
-      {/* Article Content */}
+      {/* Article Content with Injected Video */}
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-        <div
-          className="article-content"
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
+        {(() => {
+          // Logic to split content and inject video in the middle
+          const paragraphs = article.content.split('</p>');
+          
+          if (paragraphs.length > 2 && article.videoUrl) {
+            // Inject video after the 2nd paragraph
+            const firstHalf = paragraphs.slice(0, 2).join('</p>') + '</p>';
+            const secondHalf = paragraphs.slice(2).join('</p>');
+            
+            return (
+              <>
+                <div className="article-content prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: firstHalf }} />
+                
+                <div className="my-10 overflow-hidden rounded-2xl bg-black shadow-2xl">
+                  <video
+                    src={article.videoUrl}
+                    className="w-full"
+                    controls
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  />
+                </div>
+                
+                <div className="article-content prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: secondHalf }} />
+              </>
+            );
+          }
+          
+          // Fallback if content is too short or no video
+          return (
+            <div
+              className="article-content prose dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: article.content }}
+            />
+          );
+        })()}
       </div>
 
       {/* ── Floating Side Share (Desktop) ── */}

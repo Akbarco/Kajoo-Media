@@ -2,9 +2,7 @@ import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { formatDateShort, getReadingTime, formatNumber } from "@/lib/helpers";
 import type { Article } from "@/lib/types";
-import { Eye, Bookmark } from "lucide-react";
-import { useBookmarks } from "@/hooks/useBookmarks";
-import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
 interface ArticleCardProps {
   article: Article;
@@ -16,13 +14,6 @@ export default function ArticleCard({
   variant = "default",
 }: ArticleCardProps) {
   const readingTime = getReadingTime(article.content);
-  const { toggleBookmark, isBookmarked } = useBookmarks();
-
-  const handleBookmark = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleBookmark(article);
-  };
 
   if (variant === "horizontal") {
     return (
@@ -143,7 +134,7 @@ export default function ArticleCard({
 
   // Default card
   return (
-    <Link to={`/artikel/${article.slug}`} className="group animate-fade-in">
+    <Link to={`/artikel/${article.slug}`} className="group animate-fade-in block">
       {/* Thumbnail */}
       <div className="aspect-video overflow-hidden rounded-xl bg-muted">
         {article.thumbnail ? (
@@ -164,22 +155,6 @@ export default function ArticleCard({
             </span>
           </div>
         )}
-        
-        {/* Bookmark Overlay Button */}
-        <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button
-            variant="secondary"
-            size="icon"
-            className={`h-8 w-8 rounded-full shadow-md backdrop-blur-md border-none ${
-              isBookmarked(article.id)
-                ? "bg-amber-500 text-white hover:bg-amber-600"
-                : "bg-white/80 text-foreground hover:bg-white"
-            }`}
-            onClick={handleBookmark}
-          >
-            <Bookmark className={`h-4 w-4 ${isBookmarked(article.id) ? "fill-current" : ""}`} />
-          </Button>
-        </div>
       </div>
 
       {/* Content */}

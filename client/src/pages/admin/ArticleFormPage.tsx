@@ -30,10 +30,12 @@ export default function ArticleFormPage() {
     categoryId: '',
     excerpt: '',
     thumbnail: '',
+    videoUrl: '',
     status: 'DRAFT' as 'DRAFT' | 'PUBLISHED',
     isFeatured: false,
   });
   const [uploading, setUploading] = useState(false);
+  const [videoUploading, setVideoUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(isEdit);
 
@@ -53,6 +55,7 @@ export default function ArticleFormPage() {
               categoryId: article.categoryId,
               excerpt: article.excerpt || '',
               thumbnail: article.thumbnail || '',
+              videoUrl: article.videoUrl || '',
               status: article.status,
               isFeatured: article.isFeatured,
             });
@@ -73,13 +76,34 @@ export default function ArticleFormPage() {
 
     setUploading(true);
     try {
-      const result = await uploadService.uploadImage(file);
+      const result = await uploadService.uploadMedia(file);
       setForm((prev) => ({ ...prev, thumbnail: result.url }));
       toast.success('Gambar berhasil diupload.');
     } catch {
       toast.error('Gagal mengupload gambar.');
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error('Ukuran file maksimal 50MB.');
+      return;
+    }
+
+    setVideoUploading(true);
+    try {
+      const result = await uploadService.uploadMedia(file);
+      setForm((prev) => ({ ...prev, videoUrl: result.url }));
+      toast.success('Video berhasil diupload.');
+    } catch {
+      toast.error('Gagal mengupload video.');
+    } finally {
+      setVideoUploading(false);
     }
   };
 
@@ -94,6 +118,7 @@ export default function ArticleFormPage() {
         categoryId: form.categoryId,
         excerpt: form.excerpt || null,
         thumbnail: form.thumbnail || null,
+        videoUrl: form.videoUrl || null,
         status: form.status,
         isFeatured: form.isFeatured,
       };
@@ -307,6 +332,55 @@ export default function ArticleFormPage() {
                       onChange={handleImageUpload}
                       className="hidden"
                       disabled={uploading}
+                    />
+                  </label>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Short Video */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Video Singkat (30-60s)</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {form.videoUrl ? (
+                  <div className="relative">
+                    <video
+                      src={form.videoUrl}
+                      className="w-full rounded-lg"
+                      controls
+                      autoPlay
+                      muted
+                      loop
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute right-2 top-2 h-7 w-7"
+                      onClick={() => setForm((prev) => ({ ...prev, videoUrl: '' }))}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                ) : (
+                  <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-8 transition-colors hover:bg-muted/50">
+                    {videoUploading ? (
+                      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                    ) : (
+                      <Upload className="h-6 w-6 text-muted-foreground" />
+                    )}
+                    <span className="text-sm text-muted-foreground">
+                      {videoUploading ? 'Mengupload...' : 'Klik untuk upload video'}
+                    </span>
+                    <span className="text-xs text-muted-foreground">MP4, WebM (max 50MB)</span>
+                    <input
+                      type="file"
+                      accept="video/mp4,video/webm"
+                      onChange={handleVideoUpload}
+                      className="hidden"
+                      disabled={videoUploading}
                     />
                   </label>
                 )}

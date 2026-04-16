@@ -166,6 +166,7 @@ export async function createArticle(data: CreateArticleInput, authorId: string) 
       excerpt: data.excerpt || null,
       content: sanitizedContent,
       thumbnail: data.thumbnail || null,
+      videoUrl: data.videoUrl || null,
       status: data.status || ArticleStatus.DRAFT,
       isFeatured: data.isFeatured || false,
       publishedAt: data.status === ArticleStatus.PUBLISHED ? new Date() : null,

@@ -8,9 +8,9 @@ interface UploadResponse {
 }
 
 export const uploadService = {
-  uploadImage: async (file: File): Promise<UploadResponse> => {
+  uploadMedia: async (file: File): Promise<UploadResponse> => {
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', file); // 'image' is the field name expected by the server
 
     const res = await api.post<{ success: boolean; data: UploadResponse }>('/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
