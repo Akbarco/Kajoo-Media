@@ -10,6 +10,7 @@ import {
   Sun,
   Moon,
   MessageCircle,
+  Clock,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useThemeStore } from '@/store/themeStore';
@@ -23,6 +24,7 @@ const navItems = [
   { label: 'Artikel', icon: FileText, path: '/admin/artikel' },
   { label: 'Kategori', icon: Tags, path: '/admin/kategori' },
   { label: 'Komentar', icon: MessageCircle, path: '/admin/komentar' },
+  { label: 'Tracking Expired', icon: Clock, path: '/admin/tracking-expired' },
   { label: 'Pengaturan', icon: Settings, path: '/admin/settings' },
 ];
 

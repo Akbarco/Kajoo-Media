@@ -181,9 +181,16 @@ export default function ArticleListPage() {
                     </TableCell>
                     <TableCell className="text-sm">{article.author.name}</TableCell>
                     <TableCell>
-                      <Badge variant={article.status === 'PUBLISHED' ? 'default' : 'secondary'} className="text-[10px]">
-                        {article.status === 'PUBLISHED' ? 'Published' : 'Draft'}
-                      </Badge>
+                      <div className="flex flex-col gap-1">
+                        <Badge variant={article.status === 'PUBLISHED' ? 'default' : 'secondary'} className="text-[10px] w-fit">
+                          {article.status === 'PUBLISHED' ? 'Published' : 'Draft'}
+                        </Badge>
+                        {article.status === 'PUBLISHED' && article.expiresAt && new Date(article.expiresAt) < new Date() && (
+                          <Badge variant="destructive" className="text-[10px] w-fit">
+                            Expired
+                          </Badge>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col gap-1 text-[10px] text-muted-foreground">

@@ -24,6 +24,7 @@ import ArticleFormPage from "@/pages/admin/ArticleFormPage";
 import CategoryListPage from "@/pages/admin/CategoryListPage";
 import CommentListPage from "@/pages/admin/CommentListPage";
 import SettingsPage from "@/pages/admin/SettingsPage";
+import ExpiredTrackingPage from "@/pages/admin/ExpiredTrackingPage";
 
 import { HelmetProvider } from "react-helmet-async";
 
@@ -64,6 +65,7 @@ function App() {
                 <Route path="artikel/:id/edit" element={<ArticleFormPage />} />
                 <Route path="kategori" element={<CategoryListPage />} />
                 <Route path="komentar" element={<CommentListPage />} />
+                <Route path="tracking-expired" element={<ExpiredTrackingPage />} />
                 <Route path="settings" element={<SettingsPage />} />
               </Route>
             </Routes>

@@ -29,8 +29,6 @@ pnpm-debug.log*
 server/node_modules/
 server/.env
 server/dist/
-server/uploads/*
-!server/uploads/.gitkeep
 
 # Client specific
 client/node_modules/

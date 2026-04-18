@@ -9,6 +9,7 @@ interface UseArticlesParams {
   page?: number;
   limit?: number;
   sort?: string;
+  hasExpiration?: boolean;
   enabled?: boolean;
 }
 

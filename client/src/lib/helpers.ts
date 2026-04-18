@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow, parseISO } from 'date-fns';
+import { format, formatDistanceToNow, parseISO, isPast, differenceInDays } from 'date-fns';
 import { id } from 'date-fns/locale';
 
 export function formatDate(date: string | null | undefined): string {
@@ -33,3 +33,25 @@ export function formatNumber(num: number): string {
   if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
   return num.toString();
 }
+
+export function getExpirationCountdown(date: string | null | undefined): { text: string; variant: 'default' | 'destructive' | 'warning' | 'secondary' } {
+  if (!date) return { text: '-', variant: 'secondary' };
+  
+  const targetDate = parseISO(date);
+  if (isPast(targetDate)) {
+    return { text: 'Sudah Kadaluarsa', variant: 'destructive' };
+  }
+
+  const days = differenceInDays(targetDate, new Date());
+  
+  if (days === 0) {
+    return { text: 'Akan kadaluarsa hari ini', variant: 'destructive' };
+  }
+  
+  if (days < 3) {
+    return { text: `${days} hari lagi`, variant: 'warning' };
+  }
+
+  return { text: `${days} hari lagi`, variant: 'default' };
+}
+

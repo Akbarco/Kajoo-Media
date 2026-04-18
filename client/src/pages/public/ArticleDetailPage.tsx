@@ -24,6 +24,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { formatDate, getReadingTime, formatNumber } from "@/lib/helpers";
+import { getImageUrl } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import SEO from "@/components/common/SEO";
 import { toast } from "sonner";
@@ -217,7 +218,7 @@ export default function ArticleDetailPage() {
       <SEO
         title={article.title}
         description={article.excerpt || undefined}
-        image={article.thumbnail || undefined}
+        image={article.thumbnail ? getImageUrl(article.thumbnail) : undefined}
         type="article"
       />
       {/* ── Reading Progress Bar ── */}
@@ -281,7 +282,7 @@ export default function ArticleDetailPage() {
       <div className="mx-auto mt-8 max-w-4xl px-4 sm:px-6">
         {article.thumbnail && (
           <img
-            src={article.thumbnail}
+            src={getImageUrl(article.thumbnail)}
             alt={article.title}
             className="w-full rounded-2xl object-cover shadow-md"
             onError={(e) => {
@@ -301,8 +302,13 @@ export default function ArticleDetailPage() {
       {/* Article Content with Injected Video */}
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
         {(() => {
+          const serverUrl = import.meta.env.VITE_SERVER_URL || '';
+          const parsedContent = serverUrl 
+            ? article.content.replace(/src="\/uploads\//g, `src="${serverUrl}/uploads/`) 
+            : article.content;
+
           // Logic to split content and inject video in the middle
-          const paragraphs = article.content.split('</p>');
+          const paragraphs = parsedContent.split('</p>');
           
           if (paragraphs.length > 2 && article.videoUrl) {
             // Inject video after the 2nd paragraph
@@ -334,7 +340,7 @@ export default function ArticleDetailPage() {
           return (
             <div
               className="article-content prose dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: article.content }}
+              dangerouslySetInnerHTML={{ __html: parsedContent }}
             />
           );
         })()}

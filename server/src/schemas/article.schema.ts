@@ -9,6 +9,7 @@ export const createArticleSchema = z.object({
   videoUrl: z.string().optional().nullable(),
   status: z.enum(['DRAFT', 'PUBLISHED']).optional(),
   isFeatured: z.boolean().optional(),
+  expiresAt: z.string().datetime().optional().nullable(),
 });
 
 export const updateArticleSchema = createArticleSchema.partial();

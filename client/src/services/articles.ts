@@ -15,6 +15,7 @@ interface GetArticlesParams {
   page?: number;
   limit?: number;
   sort?: string;
+  hasExpiration?: boolean;
 }
 
 export const articleService = {

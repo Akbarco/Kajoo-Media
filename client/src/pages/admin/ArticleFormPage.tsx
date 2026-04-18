@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { Loader2, Upload, X, ArrowLeft } from 'lucide-react';
+import { DatePicker } from '@/components/ui/date-picker';
 import type { CreateArticleInput } from '@/lib/types';
 
 export default function ArticleFormPage() {
@@ -33,6 +34,7 @@ export default function ArticleFormPage() {
     videoUrl: '',
     status: 'DRAFT' as 'DRAFT' | 'PUBLISHED',
     isFeatured: false,
+    expiresAt: '' as string,
   });
   const [uploading, setUploading] = useState(false);
   const [videoUploading, setVideoUploading] = useState(false);
@@ -58,6 +60,7 @@ export default function ArticleFormPage() {
               videoUrl: article.videoUrl || '',
               status: article.status,
               isFeatured: article.isFeatured,
+              expiresAt: article.expiresAt ? new Date(article.expiresAt).toISOString().slice(0, 16) : '',
             });
           }
         })
@@ -121,6 +124,7 @@ export default function ArticleFormPage() {
         videoUrl: form.videoUrl || null,
         status: form.status,
         isFeatured: form.isFeatured,
+        expiresAt: form.expiresAt ? new Date(form.expiresAt).toISOString() : null,
       };
 
       if (isEdit && id) {
@@ -249,6 +253,17 @@ export default function ArticleFormPage() {
                   <Label htmlFor="featured" className="text-sm font-normal">
                     Tampilkan di Hero Section
                   </Label>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="expiresAt" className="text-sm font-medium">Tanggal Kadaluarsa (Opsional)</Label>
+                  <DatePicker 
+                    date={form.expiresAt ? new Date(form.expiresAt) : null}
+                    setDate={(date) => setForm((prev) => ({ ...prev, expiresAt: date ? date.toISOString() : '' }))}
+                  />
+                  <p className="text-[10px] leading-relaxed text-muted-foreground">
+                    Berita akan otomatis disembunyikan dari publik setelah tanggal ini. Biarkan kosong jika berita tidak memiliki masa aktif.
+                  </p>
                 </div>
 
                 <Separator />

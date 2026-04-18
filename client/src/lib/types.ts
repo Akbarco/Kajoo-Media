@@ -34,6 +34,7 @@ export interface Article {
   views: number;
   likes: number;
   publishedAt: string | null;
+  expiresAt: string | null;
   createdAt: string;
   updatedAt: string;
   authorId: string;
@@ -108,6 +109,7 @@ export interface CreateArticleInput {
   videoUrl?: string | null;
   status?: ArticleStatus;
   isFeatured?: boolean;
+  expiresAt?: string | null;
 }
 
 export type UpdateArticleInput = Partial<CreateArticleInput>;

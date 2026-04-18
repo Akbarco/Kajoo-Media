@@ -5,12 +5,16 @@ import { badgeVariants } from "@/components/ui/badge-variants"
 
 import { cn } from "@/lib/utils"
 
+export interface BadgeProps
+  extends useRender.ComponentProps<"span">,
+    VariantProps<typeof badgeVariants> {}
+
 function Badge({
   className,
   variant = "default",
   render,
   ...props
-}: useRender.ComponentProps<"span"> & VariantProps<typeof badgeVariants>) {
+}: BadgeProps) {
   return useRender({
     defaultTagName: "span",
     props: mergeProps<"span">(

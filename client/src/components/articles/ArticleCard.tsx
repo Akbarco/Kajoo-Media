@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { formatDateShort, getReadingTime, formatNumber } from "@/lib/helpers";
+import { getImageUrl } from "@/lib/utils";
 import type { Article } from "@/lib/types";
 import { Eye } from "lucide-react";
 
@@ -22,7 +23,7 @@ export default function ArticleCard({
         {article.thumbnail && (
           <div className="h-24 w-36 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
             <img
-              src={article.thumbnail}
+              src={getImageUrl(article.thumbnail)}
               alt={article.title}
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
@@ -77,7 +78,7 @@ export default function ArticleCard({
         <div className="aspect-video w-full overflow-hidden bg-muted">
           {article.thumbnail ? (
             <img
-              src={article.thumbnail}
+              src={getImageUrl(article.thumbnail)}
               alt={article.title}
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               onError={(e) => {
@@ -139,7 +140,7 @@ export default function ArticleCard({
       <div className="aspect-video overflow-hidden rounded-xl bg-muted">
         {article.thumbnail ? (
           <img
-            src={article.thumbnail}
+            src={getImageUrl(article.thumbnail)}
             alt={article.title}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"

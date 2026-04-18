@@ -11,17 +11,28 @@ interface GetArticlesParams {
   page?: number;
   limit?: number;
   sort?: string;
+  hasExpiration?: boolean;
 }
 
 export async function getArticles(params: GetArticlesParams) {
-  const { category, search, status, page = 1, limit = 12, sort = 'newest' } = params;
+  const { category, search, status, page = 1, limit = 12, sort = 'newest', hasExpiration } = params;
   const skip = (page - 1) * limit;
 
   const where: Prisma.ArticleWhereInput = {};
 
-  // By default, public queries only show PUBLISHED
+  if (hasExpiration !== undefined) {
+    where.expiresAt = hasExpiration ? { not: null } : null;
+  }
+
+  // By default, public queries only show PUBLISHED and non-expired
   if (status) {
     where.status = status;
+    if (status === ArticleStatus.PUBLISHED) {
+      where.OR = [
+        { expiresAt: null },
+        { expiresAt: { gt: new Date() } }
+      ];
+    }
   }
 
   if (category) {
@@ -49,6 +60,12 @@ export async function getArticles(params: GetArticlesParams) {
       break;
     case 'most-liked':
       orderBy = { likes: 'desc' };
+      break;
+    case 'expires-soon':
+      orderBy = { expiresAt: 'asc' };
+      break;
+    case 'expires-late':
+      orderBy = { expiresAt: 'desc' };
       break;
     default: // newest
       orderBy = { publishedAt: 'desc' };
@@ -93,6 +110,11 @@ export async function getArticleBySlug(slug: string) {
     throw new AppError(404, 'NOT_FOUND', 'Artikel tidak ditemukan.');
   }
 
+  // Check for expiration in public view
+  if (article.status === ArticleStatus.PUBLISHED && article.expiresAt && article.expiresAt < new Date()) {
+    throw new AppError(404, 'NOT_FOUND', 'Artikel ini telah kadaluarsa.');
+  }
+
   // Fetch adjacent articles for navigation
   const [prev, next] = await Promise.all([
     prisma.article.findFirst({
@@ -124,6 +146,10 @@ export async function getFeaturedArticles() {
     where: {
       isFeatured: true,
       status: ArticleStatus.PUBLISHED,
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gt: new Date() } }
+      ]
     },
     include: {
       author: { select: { id: true, name: true } },
@@ -140,6 +166,10 @@ export async function getRelatedArticles(articleId: string, categoryId: string) 
       categoryId,
       status: ArticleStatus.PUBLISHED,
       id: { not: articleId },
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gt: new Date() } }
+      ]
     },
     include: {
       author: { select: { id: true, name: true } },
@@ -170,6 +200,7 @@ export async function createArticle(data: CreateArticleInput, authorId: string) 
       status: data.status || ArticleStatus.DRAFT,
       isFeatured: data.isFeatured || false,
       publishedAt: data.status === ArticleStatus.PUBLISHED ? new Date() : null,
+      expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
       authorId,
       categoryId: data.categoryId,
     },
@@ -206,6 +237,10 @@ export async function updateArticle(id: string, data: UpdateArticleInput) {
   // Set publishedAt when transitioning to PUBLISHED
   if (data.status === ArticleStatus.PUBLISHED && article.status === ArticleStatus.DRAFT) {
     updateData.publishedAt = new Date();
+  }
+
+  if (data.expiresAt !== undefined) {
+    updateData.expiresAt = data.expiresAt ? new Date(data.expiresAt) : null;
   }
 
   return prisma.article.update({
