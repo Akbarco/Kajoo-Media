@@ -46,7 +46,7 @@ export async function summarizeArticle(req: Request, res: Response, next: NextFu
       } 
     });
   } catch (error: any) {
-    console.error('Gemini Error:', error);
+    // console.error('Gemini Error:', error);
     next(new AppError(500, 'AI_ERROR', `Gagal merangkum: ${error.message || 'Error tidak diketahui'}`));
   }
 }
