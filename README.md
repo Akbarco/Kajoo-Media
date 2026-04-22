@@ -1,71 +1,122 @@
-# 📰 Media Kajoo - Premium News Portal & CMS
+<div align="center">
+  <img src="./client/public/logo.svg" alt="Media Kajoo Logo" width="200" />
+  <br />
+  <br />
+  <h1>📰 Media Kajoo</h1>
+  <p><b>Premium News Portal & Content Management System (CMS)</b></p>
+  <p>
+    <i>A high-performance, modern digital news platform inspired by the clean aesthetics of top editorial publications.</i>
+  </p>
+</div>
 
-Media Kajoo is a high-performance, modern digital news platform inspired by the clean aesthetics of Medium.com. It provides a seamless reading experience for users and a powerful, intuitive Content Management System (CMS) for creators.
+---
 
 ## 🌟 Overview
 
-Media Kajoo is built with a focus on **visual excellence** and **technical performance**. It features a robust editorial system, state-of-the-art styling with Tailwind CSS v4, and a fully typed architecture to ensure reliability and scalability.
+**Media Kajoo** is built with a strong focus on visual excellence, editorial minimalism, and technical performance. It provides a seamless, distraction-free reading experience for users, paired with a powerful and intuitive Content Management System (CMS) for journalists and editors. 
+
+With native mobile responsiveness, advanced data visualization, and AI-powered article summaries, Media Kajoo is ready for production environments.
 
 ## 🚀 Key Features
 
-- **Premium Editorial Design:** Focused on typography and readability.
-- **Full-Featured CMS:** Comprehensive dashboard for managing articles, categories, and site statistics.
+### 🗞️ Public Portal
+- **Premium Editorial Design:** Clean typography, minimalist layout, and focus on readability.
 - **Dual-Theme Support:** Native dark and light modes with persistent user preference.
-- **Advanced Rich Text Editor:** Powered by Tiptap, supporting complex content structures.
-- **Dynamic Image Management:** Integrated image uploading and optimized rendering.
-- **SEO Ready:** Semantic HTML5 structure with dynamic metadata for maximum search engine visibility.
-- **Fully Responsive:** Fluid design that works perfectly across all devices.
+- **AI-Powered Summaries:** Integrated Google Generative AI for instant, smart article summaries.
+- **Interactive Engagement:** Clap/like system, view counters, bookmarking, and native comment sections.
+- **Mobile-First Experience:** Fluid design, dynamic drawer navigations, and highly optimized media handling.
+
+### ⚙️ Admin Dashboard (CMS)
+- **Comprehensive Management:** Manage articles, categories, comments, and media files efficiently.
+- **Rich Text Editor:** Powered by Tiptap, supporting complex content structures and formatting.
+- **Data-Driven Analytics:** Recharts-based interactive visualizations tracking article distribution and engagement metrics.
+- **Responsive Data Tables:** Highly optimized mobile-friendly data tables with robust overflow handling.
+- **Secure Authentication:** JWT-based authentication and role-based access control (RBAC).
+
+---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **Framework:** React 18 with Vite
-- **Styling:** Tailwind CSS v4 + shadcn/ui
-- **State Management:** Zustand
-- **Data Fetching:** TanStack Query (React Query)
-- **Routing:** React Router 6
+This project is structured as a **Monorepo** consisting of an independently deployed frontend and backend.
 
-### Backend
-- **Runtime:** Node.js
-- **Framework:** Express 5
-- **Database:** PostgreSQL with Prisma ORM
-- **Authentication:** JWT (JSON Web Tokens) with secure cookie handling
+### 💻 Frontend (`/client`)
+- **Core:** React 19, TypeScript, Vite
+- **Styling:** Tailwind CSS v4, shadcn/ui, Framer Motion
+- **State Management:** Zustand
+- **Data Fetching:** TanStack Query (React Query), Axios
+- **Routing:** React Router v7
+- **Editor & Charts:** Tiptap, Recharts
+
+### 🖥️ Backend (`/server`)
+- **Core:** Node.js, Express 5, TypeScript
+- **Database:** PostgreSQL via Prisma ORM
+- **Authentication:** JSON Web Tokens (JWT), bcryptjs
+- **Security & Validation:** Helmet, CORS, Zod, DOMPurify
 - **Storage:** Multer-based local storage (extensible)
+- **AI Integration:** `@google/generative-ai`
+
+---
 
 ## 📦 Getting Started
 
 ### Prerequisites
-- Node.js (v18+)
-- PostgreSQL
+- Node.js (v18 or higher)
+- PostgreSQL (Local or Cloud e.g., Neon.tech)
 
-### Installation
+### 1. Clone the repository
+```bash
+git clone https://github.com/yourusername/media-kajoo.git
+cd media-kajoo
+```
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/media-kajoo.git
-   cd media-kajoo
-   ```
+### 2. Setup the Backend
+Navigate to the server directory, install dependencies, and configure the database.
 
-2. **Setup the Backend**
-   ```bash
-   cd server
-   npm install
-   # Copy .env.example to .env and configure your DATABASE_URL
-   npx prisma migrate dev
-   npx tsx prisma/seed.ts
-   npm run dev
-   ```
+```bash
+cd server
+npm install
+```
 
-3. **Setup the Frontend**
-   ```bash
-   cd client
-   npm install
-   npm run dev
-   ```
+Create a `.env` file in the `/server` directory based on `.env.example`:
+```env
+PORT=5000
+DATABASE_URL="postgresql://user:password@localhost:5432/mediakajo"
+JWT_SECRET="your-super-secret-key"
+FRONTEND_URL="http://localhost:5173"
+```
 
-## 🔐 Default Credentials (Local Test)
-- **Admin Email:** `admin@mediakajo.id`
-- **Admin Password:** `MediaKajo2026!`
+Run database migrations and seed default data:
+```bash
+npx prisma migrate dev
+npm run db:seed
+npm run dev
+```
+
+### 3. Setup the Frontend
+Open a new terminal window, navigate to the client directory, and start the development server.
+
+```bash
+cd client
+npm install
+npm run dev
+```
 
 ---
-Built with passion for high-quality digital journalism.
+
+## 🔐 Default Admin Credentials (Local Test)
+
+After running the database seed command (`npm run db:seed`), an initial admin account will be generated:
+
+- **Email:** `admin@mediakajo.id`
+- **Password:** `MediaKajo2026!`
+
+You can use these credentials to log in to the CMS via `http://localhost:5173/admin/login`.
+
+---
+
+## 🤝 Contributing
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/yourusername/media-kajoo/issues).
+
+<div align="center">
+  <p>Built with passion for high-quality digital journalism. © 2026 Media Kajoo.</p>
+</div>
