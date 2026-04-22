@@ -94,51 +94,54 @@ export default function CategoryListPage() {
         </div>
       ) : (
         <div className="rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nama</TableHead>
-                <TableHead>Badge Preview</TableHead>
-                <TableHead>Deskripsi</TableHead>
-                <TableHead>Artikel</TableHead>
-                <TableHead className="w-24">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {categories?.map((cat) => (
-                <TableRow key={cat.id}>
-                  <TableCell className="font-medium">{cat.name}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="secondary"
-                      style={cat.color ? { backgroundColor: `${cat.color}15`, color: cat.color } : undefined}
-                    >
-                      {cat.name}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="max-w-xs truncate text-sm text-muted-foreground">
-                    {cat.description || '-'}
-                  </TableCell>
-                  <TableCell>{cat._count?.articles || 0}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(cat)}>
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-destructive hover:text-destructive"
-                        onClick={() => setDeleteId(cat.id)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="whitespace-nowrap">Nama</TableHead>
+                  <TableHead className="whitespace-nowrap">Badge Preview</TableHead>
+                  <TableHead className="whitespace-nowrap">Deskripsi</TableHead>
+                  <TableHead className="whitespace-nowrap">Artikel</TableHead>
+                  <TableHead className="w-24 whitespace-nowrap">Aksi</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {categories?.map((cat) => (
+                  <TableRow key={cat.id}>
+                    <TableCell className="font-medium whitespace-nowrap">{cat.name}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="secondary"
+                        className="whitespace-nowrap"
+                        style={cat.color ? { backgroundColor: `${cat.color}15`, color: cat.color } : undefined}
+                      >
+                        {cat.name}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="max-w-xs truncate text-sm text-muted-foreground whitespace-nowrap">
+                      {cat.description || '-'}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">{cat._count?.articles || 0}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(cat)}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          onClick={() => setDeleteId(cat.id)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       )}
 

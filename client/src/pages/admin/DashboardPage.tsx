@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { FileText, Tags, Calendar, FilePenLine, ArrowRight, Eye, Pencil, Heart, MessageCircle } from 'lucide-react';
 import { formatDateShort, formatNumber } from '@/lib/helpers';
 import type { Comment } from '@/lib/types';
+import { DashboardChart } from '@/components/admin/DashboardChart';
 
 export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useArticleStats();
@@ -52,6 +53,11 @@ export default function DashboardPage() {
         ))}
       </div>
 
+      {/* Chart */}
+      {!statsLoading && stats?.articlesPerCategory && (
+        <DashboardChart data={stats.articlesPerCategory} />
+      )}
+
       {/* Recent Articles */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
@@ -70,55 +76,57 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Judul</TableHead>
-                  <TableHead>Kategori</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Tanggal</TableHead>
-                  <TableHead className="w-24">Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentArticles?.data?.map((article) => (
-                  <TableRow key={article.id}>
-                    <TableCell className="max-w-xs truncate font-medium">{article.title}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="secondary"
-                        className="text-[10px]"
-                        style={article.category.color ? { backgroundColor: `${article.category.color}15`, color: article.category.color } : undefined}
-                      >
-                        {article.category.name}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={article.status === 'PUBLISHED' ? 'default' : 'secondary'} className="text-[10px]">
-                        {article.status === 'PUBLISHED' ? 'Published' : 'Draft'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {formatDateShort(article.publishedAt || article.createdAt)}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Link to={`/artikel/${article.slug}`} target="_blank">
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Eye className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        <Link to={`/admin/artikel/${article.id}/edit`}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Pencil className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="whitespace-nowrap">Judul</TableHead>
+                    <TableHead className="whitespace-nowrap">Kategori</TableHead>
+                    <TableHead className="whitespace-nowrap">Status</TableHead>
+                    <TableHead className="whitespace-nowrap">Tanggal</TableHead>
+                    <TableHead className="w-24 whitespace-nowrap">Aksi</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {recentArticles?.data?.map((article) => (
+                    <TableRow key={article.id}>
+                      <TableCell className="max-w-xs truncate font-medium">{article.title}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className="text-[10px] whitespace-nowrap"
+                          style={article.category.color ? { backgroundColor: `${article.category.color}15`, color: article.category.color } : undefined}
+                        >
+                          {article.category.name}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={article.status === 'PUBLISHED' ? 'default' : 'secondary'} className="text-[10px] whitespace-nowrap">
+                          {article.status === 'PUBLISHED' ? 'Published' : 'Draft'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                        {formatDateShort(article.publishedAt || article.createdAt)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Link to={`/artikel/${article.slug}`} target="_blank">
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <Eye className="h-3.5 w-3.5" />
+                            </Button>
+                          </Link>
+                          <Link to={`/admin/artikel/${article.id}/edit`}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                          </Link>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>

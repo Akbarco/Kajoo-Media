@@ -95,71 +95,73 @@ export default function CommentListPage() {
       </div>
 
       <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b bg-muted/30">
-            <tr>
-              <th className="p-4 font-semibold">Pengirim</th>
-              <th className="p-4 font-semibold">Komentar</th>
-              <th className="p-4 font-semibold">Artikel</th>
-              <th className="p-4 font-semibold">Waktu</th>
-              <th className="p-4 font-semibold text-right">Aksi</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {isLoading ? (
-              [1, 2, 3].map((i) => (
-                <tr key={i}>
-                  <td className="p-4"><Skeleton className="h-4 w-24" /></td>
-                  <td className="p-4"><Skeleton className="h-12 w-full" /></td>
-                  <td className="p-4"><Skeleton className="h-4 w-32" /></td>
-                  <td className="p-4"><Skeleton className="h-4 w-16" /></td>
-                  <td className="p-4 text-right"><Skeleton className="h-8 w-8 ml-auto" /></td>
-                </tr>
-              ))
-            ) : filteredComments.length > 0 ? (
-              filteredComments.map((comment) => (
-                <tr key={comment.id} className="hover:bg-muted/10 transition-colors">
-                  <td className="p-4">
-                    <div className="font-medium">{comment.name}</div>
-                  </td>
-                  <td className="p-4 max-w-xs">
-                    <p className="line-clamp-2 text-muted-foreground">{comment.content}</p>
-                  </td>
-                  <td className="p-4">
-                    <a 
-                      href={`/artikel/${comment.article.slug}`} 
-                      target="_blank" 
-                      className="flex items-center gap-1 text-primary hover:underline"
-                    >
-                      <span className="line-clamp-1">{comment.article.title}</span>
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  </td>
-                  <td className="p-4 whitespace-nowrap text-muted-foreground">
-                    {formatDate(comment.createdAt)}
-                  </td>
-                  <td className="p-4 text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                      onClick={() => handleDelete(comment.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))
-            ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm min-w-[600px]">
+            <thead className="border-b bg-muted/30">
               <tr>
-                <td colSpan={5} className="p-12 text-center text-muted-foreground">
-                  <MessageSquare className="h-10 w-10 mx-auto mb-3 opacity-20" />
-                  <p>Tidak ada komentar ditemukan.</p>
-                </td>
+                <th className="p-4 font-semibold whitespace-nowrap">Pengirim</th>
+                <th className="p-4 font-semibold whitespace-nowrap">Komentar</th>
+                <th className="p-4 font-semibold whitespace-nowrap">Artikel</th>
+                <th className="p-4 font-semibold whitespace-nowrap">Waktu</th>
+                <th className="p-4 font-semibold text-right whitespace-nowrap">Aksi</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y">
+              {isLoading ? (
+                [1, 2, 3].map((i) => (
+                  <tr key={i}>
+                    <td className="p-4"><Skeleton className="h-4 w-24" /></td>
+                    <td className="p-4"><Skeleton className="h-12 w-full" /></td>
+                    <td className="p-4"><Skeleton className="h-4 w-32" /></td>
+                    <td className="p-4"><Skeleton className="h-4 w-16" /></td>
+                    <td className="p-4 text-right"><Skeleton className="h-8 w-8 ml-auto" /></td>
+                  </tr>
+                ))
+              ) : filteredComments.length > 0 ? (
+                filteredComments.map((comment) => (
+                  <tr key={comment.id} className="hover:bg-muted/10 transition-colors">
+                    <td className="p-4">
+                      <div className="font-medium whitespace-nowrap">{comment.name}</div>
+                    </td>
+                    <td className="p-4 max-w-xs">
+                      <p className="line-clamp-2 text-muted-foreground min-w-[200px]">{comment.content}</p>
+                    </td>
+                    <td className="p-4">
+                      <a 
+                        href={`/artikel/${comment.article.slug}`} 
+                        target="_blank" 
+                        className="flex items-center gap-1 text-primary hover:underline whitespace-nowrap"
+                      >
+                        <span className="line-clamp-1 max-w-[150px]">{comment.article.title}</span>
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </td>
+                    <td className="p-4 whitespace-nowrap text-muted-foreground">
+                      {formatDate(comment.createdAt)}
+                    </td>
+                    <td className="p-4 text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        onClick={() => handleDelete(comment.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="p-12 text-center text-muted-foreground">
+                    <MessageSquare className="h-10 w-10 mx-auto mb-3 opacity-20" />
+                    <p>Tidak ada komentar ditemukan.</p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

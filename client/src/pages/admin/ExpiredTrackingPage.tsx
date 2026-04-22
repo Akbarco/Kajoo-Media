@@ -119,82 +119,84 @@ export default function ExpiredTrackingPage() {
         </div>
 
         <div className="rounded-xl border border-primary/10 bg-card overflow-hidden shadow-lg">
-          <Table>
-            <TableHeader className="bg-muted/50 border-b border-primary/5">
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="w-[450px] font-bold uppercase tracking-tight text-xs text-foreground">Judul Artikel</TableHead>
-                <TableHead className="font-bold uppercase tracking-tight text-xs text-foreground">Status Masa Aktif</TableHead>
-                <TableHead className="font-bold uppercase tracking-tight text-xs text-foreground">Estimasi Berakhir</TableHead>
-                <TableHead className="text-center font-bold uppercase tracking-tight text-xs text-foreground">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-                  {isLoading ? (
-                    [...Array(5)].map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell><Skeleton className="h-5 w-full" /></TableCell>
-                        <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                        <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                        <TableCell><Skeleton className="h-8 w-8 mx-auto" /></TableCell>
-                      </TableRow>
-                    ))
-                  ) : data?.data?.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={4} className="h-64 text-center">
-                        <div className="flex flex-col items-center justify-center gap-3 text-muted-foreground">
-                          <Clock className="h-12 w-12 opacity-10" />
-                          <p>Tidak ada artikel dengan masa aktif ditemukan.</p>
-                          <Link to="/admin/artikel/baru">
-                            <Button variant="outline" size="sm">Mulai Tulis Artikel</Button>
-                          </Link>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    data?.data.map((article) => {
-                      const countdown = getExpirationCountdown(article.expiresAt);
-                      return (
-                        <TableRow 
-                          key={article.id}
-                          className="group hover:bg-muted/50 transition-colors border-b border-primary/5 last:border-0"
-                        >
-                          <TableCell className="font-medium align-middle">
-                            <div className="flex flex-col">
-                              <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{article.title}</span>
-                              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1">
-                                
-                                {article.category.name}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="align-middle">
-                            <Badge variant={countdown.variant as BadgeProps['variant']} className="px-2 py-0.5 text-[10px] font-bold uppercase">
-                              {countdown.text}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-sm text-foreground/80 font-medium align-middle">
-                            {formatDate(article.expiresAt)}
-                          </TableCell>
-                          <TableCell className="text-center align-middle">
-                            <div className="flex items-center justify-center gap-2">
-                              <Link to={`/admin/artikel/${article.id}/edit`}>
-                                <Button variant="ghost" size="icon" title="Edit Masa Aktif" className="h-8 w-8 hover:bg-primary/20 hover:text-primary">
-                                  <Pencil className="h-3.5 w-3.5" />
-                                </Button>
-                              </Link>
-                              <Link to={`/artikel/${article.slug}`} target="_blank">
-                                <Button variant="ghost" size="icon" title="Lihat di Portal" className="h-8 w-8 hover:bg-foreground/10">
-                                  <Eye className="h-3.5 w-3.5" />
-                                </Button>
-                              </Link>
-                            </div>
-                          </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-muted/50 border-b border-primary/5">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="w-[450px] font-bold uppercase tracking-tight text-xs text-foreground whitespace-nowrap">Judul Artikel</TableHead>
+                  <TableHead className="font-bold uppercase tracking-tight text-xs text-foreground whitespace-nowrap">Status Masa Aktif</TableHead>
+                  <TableHead className="font-bold uppercase tracking-tight text-xs text-foreground whitespace-nowrap">Estimasi Berakhir</TableHead>
+                  <TableHead className="text-center font-bold uppercase tracking-tight text-xs text-foreground whitespace-nowrap">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                    {isLoading ? (
+                      [...Array(5)].map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell><Skeleton className="h-5 w-full" /></TableCell>
+                          <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                          <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                          <TableCell><Skeleton className="h-8 w-8 mx-auto" /></TableCell>
                         </TableRow>
-                      );
-                    })
-                  )}
-                </TableBody>
-          </Table>
+                      ))
+                    ) : data?.data?.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={4} className="h-64 text-center">
+                          <div className="flex flex-col items-center justify-center gap-3 text-muted-foreground">
+                            <Clock className="h-12 w-12 opacity-10" />
+                            <p>Tidak ada artikel dengan masa aktif ditemukan.</p>
+                            <Link to="/admin/artikel/baru">
+                              <Button variant="outline" size="sm">Mulai Tulis Artikel</Button>
+                            </Link>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      data?.data.map((article) => {
+                        const countdown = getExpirationCountdown(article.expiresAt);
+                        return (
+                          <TableRow 
+                            key={article.id}
+                            className="group hover:bg-muted/50 transition-colors border-b border-primary/5 last:border-0"
+                          >
+                            <TableCell className="font-medium align-middle">
+                              <div className="flex flex-col">
+                                <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors whitespace-nowrap">{article.title}</span>
+                                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1 whitespace-nowrap">
+                                  
+                                  {article.category.name}
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="align-middle">
+                              <Badge variant={countdown.variant as BadgeProps['variant']} className="px-2 py-0.5 text-[10px] font-bold uppercase whitespace-nowrap">
+                                {countdown.text}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-sm text-foreground/80 font-medium align-middle whitespace-nowrap">
+                              {formatDate(article.expiresAt)}
+                            </TableCell>
+                            <TableCell className="text-center align-middle whitespace-nowrap">
+                              <div className="flex items-center justify-center gap-2">
+                                <Link to={`/admin/artikel/${article.id}/edit`}>
+                                  <Button variant="ghost" size="icon" title="Edit Masa Aktif" className="h-8 w-8 hover:bg-primary/20 hover:text-primary">
+                                    <Pencil className="h-3.5 w-3.5" />
+                                  </Button>
+                                </Link>
+                                <Link to={`/artikel/${article.slug}`} target="_blank">
+                                  <Button variant="ghost" size="icon" title="Lihat di Portal" className="h-8 w-8 hover:bg-foreground/10">
+                                    <Eye className="h-3.5 w-3.5" />
+                                  </Button>
+                                </Link>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    )}
+                  </TableBody>
+            </Table>
+          </div>
         </div>
 
         {/* Pagination logic could go here similarly to ArticleListPage */}

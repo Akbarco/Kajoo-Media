@@ -129,110 +129,112 @@ export default function ArticleListPage() {
         </div>
       ) : (
         <div className="rounded-lg border bg-card overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/50">
-                <TableHead className="font-bold">Judul</TableHead>
-                <TableHead className="font-bold">Kategori</TableHead>
-                <TableHead className="font-bold">Penulis</TableHead>
-                <TableHead className="font-bold">Status</TableHead>
-                <TableHead className="font-bold">Engagement</TableHead>
-                <TableHead className="font-bold">Tanggal</TableHead>
-                <TableHead className="w-32 font-bold">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data?.data?.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="h-32 text-center text-muted-foreground">
-                    Tidak ada artikel yang ditemukan.
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50">
+                  <TableHead className="font-bold whitespace-nowrap">Judul</TableHead>
+                  <TableHead className="font-bold whitespace-nowrap">Kategori</TableHead>
+                  <TableHead className="font-bold whitespace-nowrap">Penulis</TableHead>
+                  <TableHead className="font-bold whitespace-nowrap">Status</TableHead>
+                  <TableHead className="font-bold whitespace-nowrap">Engagement</TableHead>
+                  <TableHead className="font-bold whitespace-nowrap">Tanggal</TableHead>
+                  <TableHead className="w-32 font-bold whitespace-nowrap">Aksi</TableHead>
                 </TableRow>
-              ) : (
-                data?.data?.map((article) => (
-                  <TableRow key={article.id} className="hover:bg-muted/30 transition-colors">
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded bg-muted">
-                          {article.thumbnail ? (
-                            <img 
-                              src={article.thumbnail} 
-                              alt="" 
-                              className="h-full w-full object-cover" 
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = 'https://placehold.co/400x300/1e293b/white?text=Media+Kajo';
-                              }}
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center text-[10px] font-bold text-muted-foreground/40">MK</div>
-                          )}
-                        </div>
-                        <span className="max-w-xs truncate font-medium">{article.title}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="secondary"
-                        className="text-[10px] uppercase font-bold tracking-tighter"
-                        style={article.category.color ? { backgroundColor: `${article.category.color}15`, color: article.category.color } : undefined}
-                      >
-                        {article.category.name}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm">{article.author.name}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        <Badge variant={article.status === 'PUBLISHED' ? 'default' : 'secondary'} className="text-[10px] w-fit">
-                          {article.status === 'PUBLISHED' ? 'Published' : 'Draft'}
-                        </Badge>
-                        {article.status === 'PUBLISHED' && article.expiresAt && new Date(article.expiresAt) < new Date() && (
-                          <Badge variant="destructive" className="text-[10px] w-fit">
-                            Expired
-                          </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1 text-[10px] text-muted-foreground">
-                        <div className="flex items-center gap-4">
-                          <span className="flex items-center gap-1.5"><Eye className="h-3 w-3" />{formatNumber(article.views)}</span>
-                          <span className="flex items-center gap-1.5"><Heart className="h-3 w-3" />{formatNumber(article.likes)}</span>
-                        </div>
-                        <span className="flex items-center gap-1.5 text-primary/70 font-medium">
-                          <MessageSquare className="h-3 w-3" />{formatNumber(article._count?.comments || 0)} Komentar
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {formatDateShort(article.publishedAt || article.createdAt)}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Link to={`/artikel/${article.slug}`} target="_blank">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted hover:text-primary transition-colors">
-                            <Eye className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        <Link to={`/admin/artikel/${article.id}/edit`}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted hover:text-blue-500 transition-colors">
-                            <Pencil className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive transition-colors"
-                          onClick={() => setDeleteId(article.id)}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
+              </TableHeader>
+              <TableBody>
+                {data?.data?.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="h-32 text-center text-muted-foreground">
+                      Tidak ada artikel yang ditemukan.
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                ) : (
+                  data?.data?.map((article) => (
+                    <TableRow key={article.id} className="hover:bg-muted/30 transition-colors">
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded bg-muted">
+                            {article.thumbnail ? (
+                              <img 
+                                src={article.thumbnail} 
+                                alt="" 
+                                className="h-full w-full object-cover" 
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = 'https://placehold.co/400x300/1e293b/white?text=Media+Kajo';
+                                }}
+                              />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center text-[10px] font-bold text-muted-foreground/40">MK</div>
+                            )}
+                          </div>
+                          <span className="max-w-xs truncate font-medium">{article.title}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className="text-[10px] uppercase font-bold tracking-tighter whitespace-nowrap"
+                          style={article.category.color ? { backgroundColor: `${article.category.color}15`, color: article.category.color } : undefined}
+                        >
+                          {article.category.name}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-sm whitespace-nowrap">{article.author.name}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          <Badge variant={article.status === 'PUBLISHED' ? 'default' : 'secondary'} className="text-[10px] w-fit whitespace-nowrap">
+                            {article.status === 'PUBLISHED' ? 'Published' : 'Draft'}
+                          </Badge>
+                          {article.status === 'PUBLISHED' && article.expiresAt && new Date(article.expiresAt) < new Date() && (
+                            <Badge variant="destructive" className="text-[10px] w-fit whitespace-nowrap">
+                              Expired
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1 text-[10px] text-muted-foreground whitespace-nowrap">
+                          <div className="flex items-center gap-4">
+                            <span className="flex items-center gap-1.5"><Eye className="h-3 w-3" />{formatNumber(article.views)}</span>
+                            <span className="flex items-center gap-1.5"><Heart className="h-3 w-3" />{formatNumber(article.likes)}</span>
+                          </div>
+                          <span className="flex items-center gap-1.5 text-primary/70 font-medium">
+                            <MessageSquare className="h-3 w-3" />{formatNumber(article._count?.comments || 0)} Komentar
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                        {formatDateShort(article.publishedAt || article.createdAt)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Link to={`/artikel/${article.slug}`} target="_blank">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted hover:text-primary transition-colors">
+                              <Eye className="h-3.5 w-3.5" />
+                            </Button>
+                          </Link>
+                          <Link to={`/admin/artikel/${article.id}/edit`}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted hover:text-blue-500 transition-colors">
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive transition-colors"
+                            onClick={() => setDeleteId(article.id)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       )}
 

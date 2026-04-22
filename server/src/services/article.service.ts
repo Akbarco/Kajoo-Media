@@ -265,7 +265,7 @@ export async function deleteArticle(id: string) {
 }
 
 export async function getArticleStats() {
-  const [total, published, draft, thisMonth, aggregates, recentComments] = await Promise.all([
+  const [total, published, draft, thisMonth, aggregates, recentComments, categoriesData] = await Promise.all([
     prisma.article.count(),
     prisma.article.count({ where: { status: ArticleStatus.PUBLISHED } }),
     prisma.article.count({ where: { status: ArticleStatus.DRAFT } }),
@@ -283,7 +283,16 @@ export async function getArticleStats() {
       orderBy: { createdAt: 'desc' },
       take: 5,
     }),
+    prisma.category.findMany({
+      select: { name: true, color: true, _count: { select: { articles: true } } }
+    }),
   ]);
+
+  const articlesPerCategory = categoriesData.map(c => ({
+    name: c.name,
+    color: c.color || '#2563EB',
+    count: c._count.articles
+  })).sort((a, b) => b.count - a.count);
 
   return {
     total,
@@ -293,6 +302,7 @@ export async function getArticleStats() {
     totalViews: aggregates._sum.views || 0,
     totalLikes: aggregates._sum.likes || 0,
     recentComments,
+    articlesPerCategory,
   };
 }
 
