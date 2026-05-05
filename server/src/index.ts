@@ -15,6 +15,7 @@ import categoryRoutes from './routes/category.routes';
 import commentRoutes from './routes/comment.routes';
 import uploadRoutes from './routes/upload.routes';
 import aiRoutes from './routes/ai.routes';
+import newsRoutes from './routes/news.routes';
 import { errorHandler } from './middlewares/errorHandler';
 
 const app = express();
@@ -57,6 +58,7 @@ app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/upload', uploadRoutes);
 app.use('/api/v1/ai', aiRoutes);
+app.use('/api/v1/news', newsRoutes);
 
 // ── Health Check ──
 app.get('/api/v1/health', (_req, res) => {

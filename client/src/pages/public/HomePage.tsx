@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useFeaturedArticles, useArticles } from '@/hooks/useArticles';
 import { useCategories } from '@/hooks/useCategories';
 import ArticleCard from '@/components/articles/ArticleCard';
+import InternationalNews from '@/components/articles/InternationalNews';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowRight } from 'lucide-react';
 import SEO from '@/components/common/SEO';
@@ -98,6 +99,11 @@ export default function HomePage() {
           </div>
         )}
       </section>
+
+      {/* ── International News (NewsAPI) ── */}
+      <div className="border-t">
+        <InternationalNews />
+      </div>
     </div>
   );
 }
